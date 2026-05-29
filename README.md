@@ -62,7 +62,7 @@ bash Code/1.1_download_contam.sh          # human chr21 + environmental bacteria
 bash run.sh
 ```
 
-This downloads nothing further. It clusters and splits the genomes, simulates the damaged and
+This clusters and splits the genomes, simulates the damaged and
 UDG datasets, precomputes the Evo 2 and BWA references, trains the four denoiser and three
 classifier variants, runs the external baselines, and produces every figure and table under
 `outputs/`. Reuse already-completed stages with the skip flags:
