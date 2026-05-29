@@ -1,0 +1,24 @@
+Coding-sequence (CDS) signal in the test set
+============================================================
+Test reads: 311,995
+
+Random-DNA expectation:        4.688 % stops per codon
+
+Best-frame stop-codon rate (mean across reads):
+  Bact clean          0.623 %    (n=200,000)
+  Bact damaged        0.668 %    (n=200,000)
+  Bact shuffled       1.366 %    (random-DNA control on same reads)
+  Human chr21         1.125 %    (n=80,000)
+
+Bact clean — per-frame stop rate (sorted within each read):
+  Best frame  :   0.623 %
+  Middle frame:   3.784 %
+  Worst frame :  10.355 %
+
+Interpretation:
+  • Bact clean << random ⇒ reads are enriched for CDS regions.
+  • Best-frame gap between clean and damaged ⇒ damage shows up as
+    extra stop codons exactly because C→T converts Q/E/W codons
+    (CAA, CAG, CGA) into TAA / TAG / TGA.
+  • Bact clean < human chr21 ⇒ the metric tracks CDS density, not
+    just GC content (human chr21 is non-coding-dominated).

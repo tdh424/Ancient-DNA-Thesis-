@@ -1,0 +1,17 @@
+Classifier threshold sweep
+============================================================
+
+── Seq-only ──
+  ROC-AUC = 0.6491   PR-AUC = 0.4006
+  Best F1  : 0.4345 @ thr 0.36  (sens 0.652, prec 0.326)
+  Best MCC : 0.2011 @ thr 0.44  (sens 0.312, prec 0.437)
+
+── Evo2 (per-base) ──
+  ROC-AUC = 0.7285   PR-AUC = 0.4749
+  Best F1  : 0.4917 @ thr 0.42  (sens 0.650, prec 0.396)
+  Best MCC : 0.2820 @ thr 0.44  (sens 0.532, prec 0.434)
+
+── Evo2 (per-base + read LL) ──
+  ROC-AUC = 0.7255   PR-AUC = 0.4720
+  Best F1  : 0.4904 @ thr 0.42  (sens 0.692, prec 0.380)
+  Best MCC : 0.2776 @ thr 0.44  (sens 0.581, prec 0.413)

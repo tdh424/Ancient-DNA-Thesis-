@@ -1,0 +1,47 @@
+# Thesis lives in Overleaf, reference PDFs and working notes are not part of the code release
+thesis/
+Material/
+decisions.md
+HANDOFF.md
+activations_debug.log
+
+# Editor and tooling config
+.vscode/
+.claude/
+
+# Data — large and reproducible from Code/3*.sh + Code/4_build_dataset.py
+data/genomes/
+data/raw/
+data/raw_udg/
+data/contam/
+data/*.npz
+data/*.bak*
+data/pydamage/
+data/read_baselines/
+
+# Model checkpoints — produced by Code/6_train_denoiser.py / Code/9_classifier.py
+outputs/models/
+outputs/results/*.npz
+
+# SLURM logs
+logs/
+
+# Legacy code/data snapshots — too large for GitHub
+archive/
+
+# Legacy / generated build artifacts
+Code/Data/
+Code/Artifacts/
+Code/Gargammel/Package/
+Code/Authentication/tools/
+Code/Old/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# OS
+.DS_Store
+Thumbs.db

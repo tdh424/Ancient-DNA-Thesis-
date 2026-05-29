@@ -1,0 +1,28 @@
+Denoiser error analysis  —  variant: evo2
+========================================================================
+Reads:    311,995    Reads where model predicted a change:     77,915 (25.0%)
+Valid positions analysed: 16,736,514
+
+── Behaviour: when does the model intervene? ────────────────────────
+  Positions changed by model:           149,929 (0.90% of all positions)
+    of which correct (→ clean):          26,715 (17.8% of changes)
+    of which wrong (≠ clean):           123,214 (82.2% of changes)
+
+── C→T damage (model should flip T → C at 5' end) ───────────────────
+  True C→T damage events:                48,046
+    recovered (T→C correctly):           13,071 (27.21%  =  recall on C→T)
+    missed   (left as T):                34,975
+
+── G→A damage (model should flip A → G at 3' end) ───────────────────
+  True G→A damage events:                45,978
+    recovered (A→G correctly):           13,644 (29.68%  =  recall on G→A)
+    missed   (left as A):                32,334
+
+── False flips (model damaged a healthy base) ───────────────────────
+  True T flipped to C (5'):              60,300
+  True A flipped to G (3'):              62,635
+  Total false flips:                    122,935
+  False-flip rate / true-flip rate:  4.60
+
+── Diagnosis ─────────────────────────────────────────────────────────
+  ⚠  More false flips than correct recoveries — precision is below 50%.

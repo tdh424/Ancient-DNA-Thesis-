@@ -1,0 +1,28 @@
+Denoiser error analysis  —  variant: seq_only
+========================================================================
+Reads:    311,995    Reads where model predicted a change:     81,794 (26.2%)
+Valid positions analysed: 16,736,514
+
+── Behaviour: when does the model intervene? ────────────────────────
+  Positions changed by model:           179,138 (1.07% of all positions)
+    of which correct (→ clean):          21,252 (11.9% of changes)
+    of which wrong (≠ clean):           157,886 (88.1% of changes)
+
+── C→T damage (model should flip T → C at 5' end) ───────────────────
+  True C→T damage events:                48,046
+    recovered (T→C correctly):           10,615 (22.09%  =  recall on C→T)
+    missed   (left as T):                37,431
+
+── G→A damage (model should flip A → G at 3' end) ───────────────────
+  True G→A damage events:                45,978
+    recovered (A→G correctly):           10,637 (23.13%  =  recall on G→A)
+    missed   (left as A):                35,341
+
+── False flips (model damaged a healthy base) ───────────────────────
+  True T flipped to C (5'):              77,010
+  True A flipped to G (3'):              80,572
+  Total false flips:                    157,582
+  False-flip rate / true-flip rate:  7.41
+
+── Diagnosis ─────────────────────────────────────────────────────────
+  ⚠  More false flips than correct recoveries — precision is below 50%.

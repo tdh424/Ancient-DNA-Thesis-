@@ -1,0 +1,37 @@
+name: ancient-dna
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - notebook
+  - jupyterlab
+  - ipykernel
+  - pandas
+  - numpy
+  - scipy
+  - matplotlib
+  - biopython
+  - msprime
+  - openblas
+  - pytorch
+  - git
+  - make
+  - curl
+  - wget
+  - unzip
+  - cmake
+  - gsl
+  - zlib
+  - perl
+  - openjdk
+  - bwa
+  - samtools
+  - pysam
+  - kraken2
+  - ncbi-datasets-cli
+  - scikit-learn
+  - pip:
+    - evo2

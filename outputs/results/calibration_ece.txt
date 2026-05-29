@@ -1,0 +1,24 @@
+Classifier calibration: Expected Calibration Error (ECE)
+============================================================
+
+  Method                          ECE      Brier
+  --------------------------------------------------
+  Seq-only                        0.1202   0.1910
+  Evo2 (per-base)                 0.1534   0.1912
+  Evo2 (per-base + read LL)       0.1599   0.1935
+
+ECE computed with 10 equal-width probability bins.
+Lower is better. Brier score = mean squared error of probability vs label.
+
+Per-bin breakdown (Evo2 per-base + read LL):
+  bin_lo   bin_hi    n         conf      acc       gap
+  -------------------------------------------------------
+  0.00     0.10      4,810   0.0680   0.0019   0.0662
+  0.10     0.20      7,197   0.1508   0.0047   0.1461
+  0.20     0.30     18,404   0.2624   0.0303   0.2321
+  0.30     0.40    103,918   0.3615   0.1466   0.2149
+  0.40     0.50    137,877   0.4432   0.2955   0.1477
+  0.50     0.60     34,630   0.5344   0.5059   0.0285
+  0.60     0.70      4,568   0.6350   0.7397   0.1047
+  0.70     0.80        533   0.7347   0.8780   0.1433
+  0.80     0.90         58   0.8292   0.9483   0.1190

@@ -1,0 +1,52 @@
+Contig-level evaluation: pyDamage vs evo_full classifier
+========================================================================
+
+Setup
+-----
+  Goal: evaluate pyDamage on the level it was designed for
+  (one prediction per contig) and aggregate our per-read
+  classifier to the same level via mean-pool.
+
+  Contig label : "ancient" if >= 25 % of the reads aligning
+                 to the contig carry a realised damage event
+                 (matches the population prevalence; a
+                 labelled-ancient contig is therefore
+                 enriched over the background).
+  Reads/contig : minimum 10 (pyDamage drops sparse contigs).
+
+Mode = oracle
+------------------------------------------------------------------------
+  Contigs scored: 174   Ancient contigs: 161
+  Method                              ROC-AUC   PR-AUC     MCC      F1
+  ----------------------------------------------------------------------
+  pyDamage predicted_accuracy           0.636    0.945   0.276   0.958
+  pyDamage 1 - pvalue                   0.743    0.963   0.391   0.961
+  evo_full (mean per contig)            0.802    0.980   0.418   0.964
+  evo_full (max per contig)             0.755    0.973   0.326   0.964
+  pyDamage (Borry 2021 call)              nan      nan   0.169   0.938
+
+Mode = denovo_1000
+------------------------------------------------------------------------
+  Contigs scored: 14   Ancient contigs: 14
+  Method                              ROC-AUC   PR-AUC     MCC      F1
+  ----------------------------------------------------------------------
+  pyDamage (Borry 2021 call)              nan      nan   0.000   1.000
+
+Mode = denovo_300
+------------------------------------------------------------------------
+  Contigs scored: 65   Ancient contigs: 57
+  Method                              ROC-AUC   PR-AUC     MCC      F1
+  ----------------------------------------------------------------------
+  pyDamage predicted_accuracy           1.000    1.000   1.000   1.000
+  pyDamage 1 - pvalue                   0.998    1.000   0.935   0.991
+  evo_full (mean per contig)            0.989    0.998   0.927   0.991
+  evo_full (max per contig)             0.716    0.939   0.476   0.950
+  pyDamage (Borry 2021 call)              nan      nan   0.935   0.991
+
+Interpretation
+--------------
+  At the contig level, pyDamage is given the format it was
+  designed for. Aggregating evo_full to contig level via
+  mean-pool puts our classifier on the same footing. The
+  read-level evaluation in Table 5.5 understated pyDamage
+  because it forced a contig-level tool into per-read output.

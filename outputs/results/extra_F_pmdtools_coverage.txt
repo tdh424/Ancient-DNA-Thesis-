@@ -1,0 +1,6 @@
+PMDtools per-source coverage
+==================================================
+
+  bact       aligned: 198,025 / 200,000 ( 99.0 %)   AUC: 0.789
+  human      aligned:      24 /  80,000 (  0.0 %)   AUC: N/A
+  env        aligned:     315 /  31,995 (  1.0 %)   AUC: N/A

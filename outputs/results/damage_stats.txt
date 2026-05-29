@@ -1,0 +1,32 @@
+Damage profile verification
+============================================================
+Test reads: 311,995
+  bacterial: 200,000
+  human:     80,000
+  env:       31,995
+
+Reads with any C->T or G->A event: 77,999 (25.00%)
+
+5' C->T frequency by position (bacterial reads, first 10 positions):
+  pos  0: measured 0.3102   theoretical 0.6909
+  pos  1: measured 0.1974   theoretical 0.2540
+  pos  2: measured 0.1309   theoretical 0.0972
+  pos  3: measured 0.0838   theoretical 0.0409
+  pos  4: measured 0.0582   theoretical 0.0207
+  pos  5: measured 0.0415   theoretical 0.0134
+  pos  6: measured 0.0287   theoretical 0.0108
+  pos  7: measured 0.0214   theoretical 0.0099
+  pos  8: measured 0.0155   theoretical 0.0096
+  pos  9: measured 0.0112   theoretical 0.0094
+
+3' G->A frequency by distance from 3' end (first 10 positions):
+  dist  0: measured 0.2947   theoretical 0.6909
+  dist  1: measured 0.1908   theoretical 0.2540
+  dist  2: measured 0.1247   theoretical 0.0972
+  dist  3: measured 0.0826   theoretical 0.0409
+  dist  4: measured 0.0559   theoretical 0.0207
+  dist  5: measured 0.0386   theoretical 0.0134
+  dist  6: measured 0.0258   theoretical 0.0108
+  dist  7: measured 0.0189   theoretical 0.0099
+  dist  8: measured 0.0163   theoretical 0.0096
+  dist  9: measured 0.0116   theoretical 0.0094

@@ -1,0 +1,15 @@
+CDS proxy metrics across denoiser operating thresholds
+==============================================================================
+  Variant                   Pt          tau  Stops/read   GapClosed   C-recovery
+  ----------------------------------------------------------------------------
+  damaged (no correction)   —             —      3.2528        0.0%       98.80%
+  seq_only                  default    0.50      3.2528        0.0%       98.80%
+  seq_only                  F1-opt     0.32      3.2114       94.7%       99.07%
+  seq_only                  MCC-opt    0.26      3.1167      311.4%       99.33%
+  evo2                      default    0.50      3.2527        0.2%       98.80%
+  evo2                      F1-opt     0.34      3.1966      128.7%       99.11%
+  evo2                      MCC-opt    0.30      3.1434      250.3%       99.26%
+  bwa                       default    0.50      3.2457       16.3%       98.86%
+  bwa                       F1-opt     0.33      3.2164       83.2%       99.06%
+  bwa                       MCC-opt    0.27      3.1390      260.4%       99.31%
+  clean (upper bound)       —             —      3.2091      100.0%      100.00%

@@ -1,0 +1,43 @@
+PMDtools — per-read evaluation on oracle BAM
+========================================================================
+
+Setup
+-----
+  BAM           : data/pydamage/oracle/test_aligned.bam (oracle alignment, same
+                  reference as BWA denoiser variant)
+  MD tags       : added with pysam.calmd
+  Base qualities: fake uniform (PMDtools refuses len(quals) < 2)
+  Reported point: Phred 23 (≈ 0.5 % error, matches simulation)
+
+Primary result (Phred 23)
+-------------------------
+  Reads scored (aligned subset) : 198,364
+  Ancient prevalence (subset)   : 38.6 %
+  Ancient prevalence (full set) : 25.0 %
+  ROC-AUC                       : 0.7887
+  PR-AUC                        : 0.6586
+  Best F1 / threshold           : 0.7384 @ PMD=0.05
+    precision / recall          : 0.701 / 0.780
+  Best MCC / threshold          : 0.5613 @ PMD=0.05
+
+Quality-score sensitivity (ROC-AUC across Phred values)
+-------------------------------------------------------
+  Phred 15    N=198,364  ROC-AUC=0.7767  PR-AUC=0.6509  best-MCC=0.527
+  Phred 20    N=198,364  ROC-AUC=0.7871  PR-AUC=0.6576  best-MCC=0.554
+  Phred 23    N=198,364  ROC-AUC=0.7887  PR-AUC=0.6586  best-MCC=0.561
+  Phred 30    N=198,364  ROC-AUC=0.7892  PR-AUC=0.6590  best-MCC=0.566
+  Phred 40    N=198,364  ROC-AUC=0.7892  PR-AUC=0.6590  best-MCC=0.566
+
+Interpretation
+--------------
+  PMDtools is reference-based and per-read, like our classifier.
+  Unlike our seq/evo_base/evo_full variants, it has access to the
+  reference base at each aligned position. The 16-point ROC-AUC
+  gap between PMDtools (0.78) and evo_full on the same aligned
+  subset (0.63) therefore quantifies what reference information
+  contributes at the per-read level in this test setting.
+
+  Coverage caveat: PMDtools only sees the 63.6 % of test reads
+  that align to the oracle reference. For the remaining 36.4 %
+  (unmapped: short / divergent / non-bacterial), PMDtools has no
+  output. Numbers are therefore on the aligned subset.

@@ -1,0 +1,28 @@
+Denoiser error analysis  —  variant: bwa
+========================================================================
+Reads:    311,995    Reads where model predicted a change:     74,937 (24.0%)
+Valid positions analysed: 16,736,514
+
+── Behaviour: when does the model intervene? ────────────────────────
+  Positions changed by model:           155,430 (0.93% of all positions)
+    of which correct (→ clean):          22,184 (14.3% of changes)
+    of which wrong (≠ clean):           133,246 (85.7% of changes)
+
+── C→T damage (model should flip T → C at 5' end) ───────────────────
+  True C→T damage events:                48,046
+    recovered (T→C correctly):           11,367 (23.66%  =  recall on C→T)
+    missed   (left as T):                36,679
+
+── G→A damage (model should flip A → G at 3' end) ───────────────────
+  True G→A damage events:                45,978
+    recovered (A→G correctly):           10,817 (23.53%  =  recall on G→A)
+    missed   (left as A):                35,161
+
+── False flips (model damaged a healthy base) ───────────────────────
+  True T flipped to C (5'):              67,380
+  True A flipped to G (3'):              65,610
+  Total false flips:                    132,990
+  False-flip rate / true-flip rate:  5.99
+
+── Diagnosis ─────────────────────────────────────────────────────────
+  ⚠  More false flips than correct recoveries — precision is below 50%.

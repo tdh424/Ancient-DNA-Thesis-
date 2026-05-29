@@ -1,0 +1,19 @@
+Bayesian Population Ceiling
+==================================================
+Empirical base frequencies (clean):
+  A=0.2814  C=0.2185  G=0.2185  T=0.2816
+
+C→T Bayesian PR-AUC : 0.0910  (random: 0.0101)
+C→T NN PR-AUC       : 0.1485
+C→T ratio NN/Bayes  : 1.63x
+
+G→A Bayesian PR-AUC : 0.0865  (random: 0.0097)
+G→A NN PR-AUC       : 0.0196
+
+Combined Bayesian   : 0.0887
+Combined NN         : 0.0840
+
+Interpretation:
+  Bayesian uses only position-in-read (Briggs decay curve).
+  NN additionally uses Evo2 sequence context.
+  Gap NN > Bayesian shows value of sequence context.

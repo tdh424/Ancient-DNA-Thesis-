@@ -1,0 +1,38 @@
+
+============================================================
+  METRIC 1 — Base Reconstruction Accuracy at True-C Positions
+============================================================
+  (% of C→T-damaged positions correctly restored to C)
+
+  Variant                          At true-C positions
+  ------------------------------  --------------------
+  Damaged (no correction)                       98.53%
+  Seq-only                                      98.53%
+  Evo2                                          98.53%
+  BWA                                           98.60%
+  Clean (upper bound)                          100.00%
+
+============================================================
+  METRIC 2 — Spurious Stop Codon Rate
+============================================================
+  (C→T creates TAA/TAG/TGA stops; lower = better)
+
+  Variant                           Stop codons/read
+  ------------------------------  ------------------
+  Damaged (no correction)                    2.6014
+  Seq-only                                   2.6014
+  Evo2                                       2.6013
+  BWA                                        2.5943
+  Clean (upper bound)                        2.5575
+  Seq-only: 0.0% of damaged→clean reduction
+  Evo2: 0.2% of damaged→clean reduction
+  BWA: 16.1% of damaged→clean reduction
+
+============================================================
+  METRIC 3 — Damage Correction PR-AUC
+============================================================
+  (PR-AUC for P(C) at T-positions where clean=C)
+
+  Seq-only                        PR-AUC = 0.0842
+  Evo2                            PR-AUC = 0.1312
+  BWA                             PR-AUC = 0.1128

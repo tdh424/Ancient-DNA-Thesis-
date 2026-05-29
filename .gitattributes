@@ -1,0 +1,8 @@
+# Normalize line endings on checkout
+* text=auto
+
+# Force Unix line endings for scripts and Makefiles
+*.sh text eol=lf
+Makefile text eol=lf
+*.pl text eol=lf
+*.py text eol=lf

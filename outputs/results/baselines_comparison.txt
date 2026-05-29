@@ -1,0 +1,23 @@
+aDNA Classifier — ML Models vs Baselines
+======================================================================================================================================
+Test set: 311,995 reads  (25.0% ancient / 75.0% modern)
+Random PR-AUC baseline = 0.2500  (class prevalence)
+
+Briggs LLR formula (reference-free, Briggs 2007):
+  p_CT(k) = s·λ^k + d  (C→T rate at 5'-position k)
+  p_GA(k) = s·λ^k + d  (G→A rate at 3'-position k)
+  Parameters: s=0.6815, λ=0.359, d=0.00937, v=0.0241
+
+Note: PMDtools / ngsBriggs condition on the reference base (C or G) at each
+  aligned position. The reference-free version used here scores ALL T/A
+  positions, which is noisier but requires no prior mapping step.
+
+── At best-MCC threshold (per model) ──
+Model                                  ROC-AUC     PR-AUC       Sens       Spec        PPV         F1     BalAcc        MCC    MCC-thr
+--------------------------------------------------------------------------------------------------------------------------------------
+  Evo2 (per-base + read LL)             0.7255     0.4720     0.5480     0.7526     0.4247     0.4786     0.6503     0.2784     0.4461
+  Evo2 (per-base)                       0.7285     0.4749     0.5852     0.7257     0.4156     0.4860     0.6554     0.2819     0.4314
+  Seq-only                              0.6491     0.4006     0.3085     0.8685     0.4388     0.3623     0.5885     0.2014     0.4412
+  Briggs LLR                            0.5490     0.2807     0.8932     0.1592     0.2615     0.4046     0.5262     0.0642     0.8332
+  pyDamage                              0.5134     0.4739     0.9772     0.0363     0.4704     0.6351     0.5068     0.0395     0.9900  [NaN masked]
+  PMDtools                              0.8940     0.9230     0.7811     0.9983     0.9974     0.8761     0.8897     0.8086     0.0100  [NaN masked]

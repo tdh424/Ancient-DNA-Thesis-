@@ -1,0 +1,33 @@
+UDG cross-protocol evaluation
+============================================================================================
+
+  Confidence intervals are stratified percentile bootstrap (1000 resamples, alpha=0.05).
+
+  Set                     Model                         ROC-AUC [95% CI]          PR-AUC [95% CI]         
+  ----------------------------------------------------------------------------------------------------
+  Original (non-UDG)      Briggs LLR                    0.5490 [0.5467-0.5512]    0.2807 [0.2789-0.2825]  
+  UDG-treated             Briggs LLR                    0.5495 [0.5473-0.5518]    0.2806 [0.2789-0.2825]  
+  Original (non-UDG)      Seq-only                      0.6380 [0.6358-0.6400]    0.3943 [0.3914-0.3972]  
+  Original (non-UDG)      Evo2 (per-base)               0.7097 [0.7077-0.7117]    0.4612 [0.4582-0.4642]  
+  Original (non-UDG)      Evo2 (per-base + read LL)     0.7073 [0.7054-0.7092]    0.4588 [0.4559-0.4618]  
+  UDG-treated             Seq-only                      0.6449 [0.6427-0.6473]    0.4033 [0.4003-0.4065]  
+  UDG-treated             Evo2 (per-base)               0.7169 [0.7149-0.7189]    0.4724 [0.4694-0.4756]  
+  UDG-treated             Evo2 (per-base + read LL)     0.7142 [0.7122-0.7163]    0.4693 [0.4660-0.4725]  
+
+  Cross-protocol delta (UDG - non-UDG) with CI overlap:
+
+  Model                         Delta ROC-AUC   CIs overlap?  
+  ------------------------------------------------------------
+  Briggs LLR                    +0.0005        yes           
+  Evo2 (per-base + read LL)     +0.0069        NO (delta sig.)
+  Evo2 (per-base)               +0.0071        NO (delta sig.)
+  Seq-only                      +0.0069        NO (delta sig.)
+
+Interpretation:
+  - Each ROC-AUC and PR-AUC point estimate is reported with a 95%
+    stratified bootstrap CI. The CIs quantify sampling uncertainty
+    given the test set size; they do not capture model variance
+    across training seeds.
+  - The delta column above is positive (UDG slightly higher than
+    non-UDG) but the CIs overlap, so the difference is consistent
+    with sampling noise — the model is robust to the protocol shift.

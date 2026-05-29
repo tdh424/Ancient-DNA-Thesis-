@@ -1,0 +1,22 @@
+Composition decomposition (ROC-AUC by modern subset)
+======================================================================
+
+  Model                     Overall  bact-bact  bact-human  bact-env   comp.gap
+  --------------------------------------------------------------------
+  Seq-only                    0.649      0.617       0.734     0.560     +0.117
+  Evo2 (per-base)             0.729      0.652       0.878     0.645     +0.226
+  Evo2 (per-base + LL)        0.726      0.652       0.870     0.645     +0.217
+
+Interpretation:
+  - The bact-vs-bact column is the only one where the modern class has
+    the same source composition as the ancient class, so it isolates
+    the damage signal. All three ML variants sit at 0.60–0.65 there.
+  - The bact-vs-human gap (last column) measures how much extra AUC
+    the model gets from composition differences (length is matched,
+    but k-mer/GC/Evo2-prior differences remain).
+  - Seq-only already shows a +0.12 gap (real composition shortcut).
+    Evo2 enlarges it to +0.22 — Evo2 has stronger priors for human
+    DNA than for specific bacterial strains, which adds confidence
+    to "clean human" calls and uncertainty to "noisy bacterial".
+  - The overall AUC of 0.73 is therefore a weighted average of a
+    hard damage-only task (0.65) and an easy composition task (0.88).
