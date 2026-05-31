@@ -1,29 +1,4 @@
-"""
-5.2_bwa_refs.py — Pre-compute BWA reference bases (realistic per-split alignment).
-
-For each split (train/val/test) this script:
-  1. Concatenates the source genomes for that split into a single FASTA
-     (mirrors the genome → split assignment from 2_simulate.sh).
-  2. Builds a BWA index on the concatenated reference.
-  3. Writes every damaged read in {split}.npz as FASTQ with name `r<idx>`.
-  4. Runs `bwa aln` (short-read mode, no seed) + `bwa samse`.
-  5. Parses the resulting BAM and stores the reference base aligned at each
-     position of each read as `ref_bwa` (uint8, shape N × MAX_LEN).
-
-Why per-split? Train/val/test were simulated from disjoint genomes
-(80/10/10 split). Aligning each read against the full genome set would
-leak test-genome information into train (and create cross-genome
-mis-alignments). Per-split alignment matches each read to the genome
-pool it was actually simulated from — but BWA still has to find the
-right one among many, so unmapped and mis-aligned reads occur naturally.
-
-For reverse-strand alignments, the reference base is complemented and
-the position flipped so `ref_bwa` is always in the original read order
-(matching `damaged` and `clean`).
-
-Run BEFORE training with --variant bwa:
-    python Code/5.2_bwa_refs.py
-"""
+"""5.2_bwa_refs.py — Add BWA per-split reference bases to the NPZ datasets."""
 
 import os
 import shutil

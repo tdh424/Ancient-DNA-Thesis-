@@ -1,22 +1,4 @@
-"""
-5.1_evo2_refs.py — Add Evo2 soft references to NPZ datasets.
-
-For each read, runs Evo2 in forward and (optionally) reverse-complement passes
-and stores the geometric-mean per-position probability distribution as ref_evo2.
-
-Shape: (N, MAX_LEN, 6) float32 — one probability vector per base position.
-At a C→T damage site: ref_evo2[read, pos, C=2] is high (Evo2 expects C).
-At a genuine T site: ref_evo2[read, pos, T=4] is high.
-
-Splits that already have ref_evo2 are skipped automatically.
-
-Performance flags:
-  --batch-size N   override default batch size (default 512)
-  --dtype bf16|fp16|fp32   inference precision (default bf16, ~2× faster than fp32)
-  --no-rc          skip reverse-complement pass (~2× faster, slight quality hit)
-
-GPU required. Roughly 14 GB VRAM in bf16, 28 GB in fp32 for evo2_7b.
-"""
+"""5.1_evo2_refs.py — Add Evo2 per-position probability references to the NPZ datasets."""
 
 import argparse
 import shutil

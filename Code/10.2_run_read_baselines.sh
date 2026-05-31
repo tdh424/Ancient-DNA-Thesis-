@@ -1,28 +1,5 @@
 #!/bin/bash
-# run_read_baselines.sh — read-level reference-based benchmarks.
-#
-# Runs PMDtools and ngsBriggs on the test split, both of which require
-# aligned reads (BAM). Output: per-read score CSVs that can be passed to
-# Code/11_baselines_compare.py for direct comparison with our ML classifier.
-#
-# Pre-requisites (one-time):
-#   conda activate ancient-dna
-#   pip install pmdtools                    # PMDtools (Skoglund 2014)
-#   # ngsBriggs (Zhao et al. 2024) — build from source:
-#   git clone https://github.com/RAHenriksen/ngsBriggs ~/tools/ngsBriggs
-#   cd ~/tools/ngsBriggs && make
-#   export PATH=~/tools/ngsBriggs:$PATH
-#   module load samtools/1.20 bwa/0.7.17
-#
-# Usage:
-#   bash Code/10.2_run_read_baselines.sh
-#
-# Reuses: data/pydamage/oracle/test_aligned.bam if it exists (from run_pydamage.sh),
-# otherwise builds its own alignment.
-#
-# Outputs:
-#   data/read_baselines/pmdtools_scores.csv     # read_id, pmds
-#   data/read_baselines/ngsbriggs_scores.csv    # read_id, posterior_ancient
+# 10.2_run_read_baselines.sh — Run PMDtools and ngsBriggs read-level benchmarks on the test split.
 
 set -euo pipefail
 

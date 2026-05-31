@@ -1,17 +1,4 @@
-"""
-8.4_cds_per_threshold.py — CDS proxy metrics across operating thresholds.
-
-For each denoiser variant (seq_only, evo2, bwa), compute:
-  - mean stop codons per read
-  - C-recovery accuracy at true-C positions
-at multiple thresholds (default 0.5 plus F1- and MCC-optimal points).
-
-Reads outputs/results/test_denoised_<variant>.npz files (they contain
-prob_c, prob_g) and re-applies the threshold locally instead of using
-the stored denoised array (which was thresholded at 0.5 by 7_denoise.py).
-
-Output: outputs/results/cds_per_threshold.txt
-"""
+"""8.4_cds_per_threshold.py — CDS proxy metrics across operating thresholds per denoiser variant."""
 from pathlib import Path
 import numpy as np
 

@@ -1,38 +1,4 @@
-"""
-6_train_denoiser.py — Train the DNADenoiser.
-
-Four variants are available via --variant:
-  seq_only  Sequence-only model. No external reference.
-  evo2      Evo2 soft-reference model. Uses per-position probability vectors
-            from Evo2 (7B), pre-computed by Code/5.1_evo2_refs.py.
-  bwa       BWA hard-reference model. Uses reference bases extracted from BWA
-            alignment, pre-computed by Code/5.2_bwa_refs.py. One-hot encoded.
-  udg       Sequence-only model trained on UDG-treated data (interior C->T
-            deamination suppressed; only terminal damage retained) for
-            cross-protocol robustness. Requires data/{train,val,test}_udg.npz
-            built via UDG=true in the simulation pipeline.
-
-Two model sizes are available via --size:
-  small   D=128, 4 layers, 8 heads, 256 dim_ff  (~1M params, default)
-  large   D=256, 6 layers, 8 heads, 512 dim_ff  (~6M params)
-
-Optional seed ensembling via --seeds (default: 1):
-  Trains N copies of the model with different random seeds and averages the
-  resulting probability vectors at inference time. Larger N reduces seed-to-seed
-  variance and typically gains 0.5-1 PR-AUC point.
-
-Architecture (all variants):
-  - Token embedding + dual sinusoidal PE (forward + reverse-from-3')
-  - Transformer encoder, pre-LayerNorm
-  - Focal loss (gamma=2) with C->T / G->A class balancing in the Briggs window
-  - bfloat16 autocast on CUDA
-  - PR-AUC checkpoint + LR warmup + cosine decay
-
-Outputs:
-  outputs/models/denoiser_{variant}[_size][_seed{N}].pt
-  outputs/models/config_{variant}.json
-  outputs/figures/training_curves_{variant}.png
-"""
+"""6_train_denoiser.py — Train the DNA denoiser (seq_only / evo2 / bwa / udg variants)."""
 
 import argparse
 import json

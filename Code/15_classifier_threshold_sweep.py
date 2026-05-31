@@ -1,16 +1,4 @@
-"""
-15_classifier_threshold_sweep.py — Threshold sweep for the aDNA classifier.
-
-For each trained classifier variant, computes precision, recall, F1, MCC and
-related metrics across a dense grid of probability thresholds. Equivalent to
-Code/8.4_denoiser_threshold_sweep.py but for the read-level classifier.
-
-Reads outputs/results/classifier_probs.npz produced by Code/9_classifier.py.
-
-Outputs:
-    outputs/figures/classifier_threshold_sweep.png   four-panel sweep figure
-    outputs/results/classifier_threshold_sweep.txt   per-variant tables
-"""
+"""15_classifier_threshold_sweep.py — Threshold sweep for the classifier variants."""
 
 from pathlib import Path
 

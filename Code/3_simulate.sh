@@ -1,33 +1,5 @@
 #!/bin/bash
-# 2_simulate.sh — Simulate realistic ancient DNA damage with Gargammel.
-#
-# Produces (clean, damaged) FASTA pairs using the Briggs et al. (2007) model.
-# Includes both C→T (5' end) and G→A (3' end) damage symmetrically.
-#
-# fragSim parameters:
-#   --loc 3.9  --scale 0.4   Log-normal fragment length (mean ~53 bp,
-#                            typical aDNA size distribution)
-#   -m 30  -M 150            Keep only reads 30–150 bp (discard extremes)
-#
-# deamSim -damage v,l,d,s — empirical Briggs (2007) fit to the Vi-33.16
-# Neanderthal sample, Table 1 of Briggs et al., PNAS 104(37):14616–14621:
-#   v = 0.0241    nick frequency (ν)
-#   l = 0.3590    geometric decay constant from read ends (λ)
-#   d = 0.00937   double-stranded interior deamination rate (δ_d)
-#   s = 0.6815    single-stranded overhang deamination rate (δ_s)
-#
-# Resulting per-position C→T probability  p(k) = s·λ^k + d :
-#   k=0  →  0.691      k=1  →  0.254     k=2  →  0.097
-#   k=3  →  0.041      k=7  →  0.012     (G→A symmetric at the 3' end)
-#
-# Note: this script runs only fragSim + deamSim. We do NOT add Illumina
-# sequencing errors (gargammel's art_illumina step) — every per-position
-# difference between clean and damaged comes from the Briggs model only.
-#
-# Usage:
-#   bash Code/3_simulate.sh
-#
-# Output → data/raw/{train,val,test}/clean.fasta + damaged.fasta
+# 3_simulate.sh — Simulate ancient DNA damage with Gargammel, producing clean/damaged FASTA pairs.
 
 set -euo pipefail
 

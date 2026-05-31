@@ -1,45 +1,5 @@
 #!/bin/bash
-# 10.1_run_pydamage.sh — pyDamage benchmark on the test split.
-#
-# This script is intentionally close to the workflow Borry et al. (2021)
-# used in the original pyDamage paper, so the comparison reflects pyDamage's
-# real performance and not setup-specific quirks. The key choices that match
-# Borry 2021:
-#   - MetaSPAdes for de novo assembly (k = 21, 33, 45) — they explicitly
-#     chose MetaSPAdes for short ancient DNA molecules.
-#   - min-contig length = 1000 bp for downstream analysis.
-#   - BWA aln -n 0.01 -o 2 -l 16500 for the simulation validation
-#     (effectively no seeding for short reads).
-# Filtering with q-value ≤ 0.05, pdj ≤ 0.6, predicted_accuracy ≥ 0.67 is
-# applied downstream in Code/11.3_contig_level_eval.py when reporting a
-# single "pyDamage call" rather than a continuous score.
-#
-# Supports two operating modes via the MODE environment variable:
-#
-#   MODE=oracle   (default)
-#       Aligns the test reads back to a concatenated reference made from the
-#       same source genomes used during simulation. This is the easy case
-#       for pyDamage because the reference is exactly correct.
-#
-#   MODE=denovo
-#       Performs de novo assembly of the test reads with MetaSPAdes, then
-#       maps the reads back to the assembled contigs and runs pyDamage on
-#       those. This is the realistic ab initio setting for pyDamage and is
-#       what the original paper validates against.
-#
-# Pre-requisites (one-time):
-#   conda activate ancient-dna
-#   pip install pydamage
-#   module load samtools/1.20 bwa/0.7.17
-#   (For MODE=denovo) conda install -c bioconda spades
-#
-# Usage:
-#   bash Code/10.1_run_pydamage.sh                   # oracle mode
-#   MODE=denovo bash Code/10.1_run_pydamage.sh       # ab initio mode
-#
-# Outputs:
-#   data/pydamage/{oracle,denovo}/test_aligned.bam
-#   data/pydamage/{oracle,denovo}/results/pydamage_results.csv
+# 10.1_run_pydamage.sh — Run the pyDamage benchmark on the test split (MODE=oracle or denovo).
 
 set -euo pipefail
 
@@ -54,7 +14,7 @@ mkdir -p "$WORK_DIR/results"
 
 for tool in bwa samtools pydamage; do
     if ! command -v "$tool" &>/dev/null; then
-        echo "ERROR: $tool not on PATH. See header for install instructions."
+        echo "ERROR: $tool not on PATH."
         exit 1
     fi
 done

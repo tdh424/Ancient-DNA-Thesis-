@@ -1,21 +1,4 @@
-"""
-plot_classifier.py — Re-plot classifier results from saved probabilities.
-
-Reads classifier_probs.npz (produced by 10_classifier.py) and
-baselines_comparison.txt-style scores from 11_baselines.py.
-Produces a unified comparison figure with all three ML variants and the
-Briggs LLR baseline on the same axes.
-
-Each model is evaluated at its own Youden-optimal, best-MCC, and best-F1
-thresholds for a fair comparison.
-
-Run after both 10_classifier.py and 11_baselines.py have completed:
-    python Code/11.1_plot_classifier.py
-
-Outputs:
-    outputs/figures/classifier_comparison.png
-    outputs/results/classifier_comparison.txt
-"""
+"""11.1_plot_classifier.py — Re-plot classifier results from saved probabilities."""
 
 from pathlib import Path
 

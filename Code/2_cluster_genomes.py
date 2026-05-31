@@ -1,36 +1,4 @@
-"""
-cluster_genomes.py — Homology-aware genome partitioning for train/val/test.
-
-Why: bacterial RefSeq genomes contain large homology between species and
-strains. A naive split-by-accession leaks information across train/val/test
-because conserved regions appear in all three splits. We solve this by
-clustering genomes via Mash distance (a fast MinHash-based ANI proxy) and
-assigning whole clusters to a single split.
-
-Pipeline:
-  1.  Mash sketch every genome (k=21, sketch size 1000)
-  2.  Pairwise Mash distance → symmetric distance matrix
-  3.  Single-linkage clustering at a Mash distance threshold (default 0.05,
-      ≈ 95% ANI — typical species boundary)
-  4.  Greedy bin-packing of clusters into train/val/test, weighted by total
-      cluster size (sum of genome lengths) to keep fragment counts balanced
-
-Inputs:
-  data/genomes/ncbi_dataset/data/<accession>/<accession>.fna
-
-Output:
-  data/genomes/split_assignment.tsv   — one row per accession:
-      <accession>\t<split>\t<cluster_id>\t<genome_size_bp>
-
-Usage:
-  module load samtools/1.20
-  conda activate ancient-dna
-  python Code/2_cluster_genomes.py                 # default threshold 0.05
-  python Code/2_cluster_genomes.py --threshold 0.10  # looser (~90% ANI)
-
-Mash is installed via:
-  conda install -n ancient-dna -c bioconda mash
-"""
+"""2_cluster_genomes.py — Cluster genomes by Mash distance and assign whole clusters to train/val/test."""
 
 import argparse
 import os

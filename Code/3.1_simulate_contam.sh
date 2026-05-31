@@ -1,20 +1,5 @@
 #!/bin/bash
-# 2b_simulate_contam.sh — Add modern contamination fragments to the simulated
-# library, in empirical proportions (Setup B).
-#
-# Run AFTER Code/3_simulate.sh has produced the bacterial endogenous reads
-# in data/raw/{train,val,test}/{clean,damaged}.fasta.
-#
-# Empirical proportions (per split, approximate):
-#   ~30% bacterial endogenous (already produced, ~with Briggs damage)
-#   ~50% human contamination  (this script)
-#   ~20% environmental bact.  (this script)
-#
-# Both human and environmental fragments are CLEAN (no Briggs damage applied),
-# matching the biological reality that modern contamination is undamaged.
-#
-# Output: appends to existing data/raw/<split>/{clean,damaged}.fasta with
-# headers prefixed HUMAN_ or ENV_ so 3_dataset.py can track per-read source.
+# 3.1_simulate_contam.sh — Append modern human and environmental contamination to the simulated library.
 
 set -euo pipefail
 

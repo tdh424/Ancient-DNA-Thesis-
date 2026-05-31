@@ -1,27 +1,4 @@
-"""
-16.1_simulation_verification.py — Verification figure for Section 3.2.
-
-Renders a three-panel figure showing what the *final* simulated test set
-actually looks like, i.e. after the 30-100 bp length filter (Section 3.3.1)
-and after the 25 % prevalence control (Section 3.3.4).
-
-  Panel 1 (left)   : fragment length distribution of bacterial test reads
-                     (after the 30-100 bp filter, so capped at 100 bp).
-  Panel 2 (middle) : C→T frequency by position from the 5' end.
-  Panel 3 (right)  : G→A frequency by distance from the 3' end.
-
-Each damage panel shows three curves: the theoretical Briggs curve
-f(k) = s·λ^k + d (mean s = 0.6815), the rate measured over the damaged
-(ancient) reads only (before prevalence control), and the rate measured over
-the full bacterial test set (after prevalence control). The damaged-reads-only
-curve sits close to Briggs, while the full-set curve is lower because ~61% of
-bacterial reads carry no realised damage (Section 3.3.4) and pull the
-population average down.
-
-Output:
-  outputs/figures/simulation_verification.png
-  thesis/figures/simulation_verification.png  (copy)
-"""
+"""16.1_simulation_verification.py — Verification figure of the final simulated test set (length + damage)."""
 from pathlib import Path
 import shutil
 

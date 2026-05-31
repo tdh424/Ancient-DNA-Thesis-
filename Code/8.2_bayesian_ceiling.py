@@ -1,25 +1,4 @@
-"""
-9_bayesian_ceiling.py — Bayesian population-level ceiling for damage correction.
-
-Tests whether the information limit is positional (Briggs parameters only)
-or contextual (Evo2 sequence context).
-
-Method:
-  For each position k from the 5' end, estimate empirical P(C→T at k)
-  from ground truth labels. Then for every T in the test set at position k,
-  compute:
-
-      P(was C | see T, position k) = damage_rate[k] * f_C
-                                     ─────────────────────────────────
-                                     f_T + damage_rate[k] * f_C
-
-  where f_C, f_T are empirical base frequencies from clean reads.
-  Use this as the score and compute PR-AUC — comparable to NN's PR-AUC.
-
-  Same logic applied symmetrically for G→A at 3' end.
-
-Output → outputs/results/bayesian_ceiling.txt
-"""
+"""8.2_bayesian_ceiling.py — Bayesian positional ceiling for damage-correction PR-AUC."""
 
 from pathlib import Path
 import numpy as np

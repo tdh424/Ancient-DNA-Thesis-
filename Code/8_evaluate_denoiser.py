@@ -1,19 +1,4 @@
-"""
-7_evaluate.py — Denoiser evaluation: all trained variants vs baselines.
-
-Loads all available test_denoised_{variant}.npz files and compares them on:
-  1. Base reconstruction accuracy at true-C positions (C→T correction quality)
-  2. Spurious stop codon rate (CDS proxy; C→T creates TAA/TAG/TGA stop codons)
-  3. Precision-Recall curves for damage correction (P(C) at T positions)
-  4. PR-AUC by read length
-
-Reference lines on every plot:
-  Damaged (no correction)  — lower bound (red dashed)
-  Clean (ground truth)     — upper bound (green dashed)
-
-Outputs → outputs/figures/evaluation.png
-Outputs → outputs/results/evaluation_summary.txt
-"""
+"""8_evaluate_denoiser.py — Evaluate all trained denoiser variants against baselines."""
 
 from pathlib import Path
 

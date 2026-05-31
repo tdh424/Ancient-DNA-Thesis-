@@ -1,45 +1,4 @@
-"""
-length_bucketed_sampler.py — Length-bucketed, class-balanced batch sampler.
-
-Motivation:
-  - All three simulated sources (bacterial, human, environmental) use the
-    same fragment length distribution (Section 3.2.1 of the thesis), so length
-    no longer serves as a discriminative shortcut for the classifier. However,
-    short and long reads still differ in how much padding the model sees, and
-    purely random shuffle batches mix very short (~30 bp) and very long
-    (~100 bp) reads together, wasting compute on padded positions.
-
-  - To use compute more efficiently AND keep each mini-batch a fair
-    representation of the population in the class balance sense, we group
-    reads by length into a small number of buckets, and each mini-batch is
-    drawn from one bucket while preserving the dataset's class prevalence
-    (e.g. 25 % ancient + 75 % modern for the classifier).
-
-Design:
-  1. Sort reads into `n_buckets` length quantiles (so each bucket has roughly
-     the same number of reads). The bucket boundaries are derived from the
-     observed length distribution at construction time, not hard-coded.
-  2. Within each bucket, split indices by class.
-  3. At each iteration:
-       a. pick a bucket at random (weighted by bucket size, so the natural
-          length distribution is preserved across batches);
-       b. draw `n_anc` ancient indices and `n_mod` modern indices from that
-          bucket, with replacement if necessary (small buckets that run out
-          of ancient examples reuse them);
-       c. yield the combined batch.
-  4. One epoch = `N / batch_size` batches.
-
-Why balanced but not flat in a distribution:
-  - Balanced  : every batch has a fixed fraction of ancient examples
-                (parameter `ancient_frac`), regardless of where in the length
-                distribution the bucket sits.
-  - Not flat  : within a batch the read lengths follow the natural variation
-                inside the bucket (a few-bp window), not an artificial uniform
-                distribution across the full 30–100 bp range.
-
-The sampler is a drop-in replacement for `shuffle=True` in a DataLoader.
-For validation / test splits, use the standard sequential loader.
-"""
+"""length_bucketed_sampler.py — Length-bucketed, class-balanced batch sampler."""
 from __future__ import annotations
 
 import numpy as np

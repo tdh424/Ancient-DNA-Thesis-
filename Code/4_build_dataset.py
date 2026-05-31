@@ -1,25 +1,4 @@
-"""
-4_build_dataset.py — Convert simulated FASTA output to encoded NPZ datasets.
-
-Reads the (clean.fasta, damaged.fasta) pairs produced by Code/3_simulate.sh
-and Code/3.1_simulate_contam.sh, integer-encodes the bases, applies a length
-filter (truncating reads longer than MAX_LEN at the 5' end), and saves as NPZ.
-
-Base encoding:
-  PAD=0  A=1  C=2  G=3  T=4  N=5
-
-Output (default) → data/{train,val,test}.npz
-  keys: damaged (N,L) uint8, clean (N,L) uint8,
-        lengths (N,) int32, sources (N,) uint8
-
-Environment overrides (used by the UDG cross-protocol pipeline):
-  RAW_DIR     input FASTA directory (default: data/raw)
-  OUT_DIR     output NPZ directory  (default: data)
-  OUT_SUFFIX  appended to output filenames, e.g. '_udg'
-  SPLITS      comma-separated list of splits to build (default: train,val,test)
-
-The ref_evo2 key is added separately by Code/5.1_evo2_refs.py.
-"""
+"""4_build_dataset.py — Encode simulated FASTA pairs into NPZ datasets (train/val/test)."""
 
 from pathlib import Path
 import numpy as np

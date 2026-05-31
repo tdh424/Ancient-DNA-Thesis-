@@ -1,34 +1,4 @@
-"""
-10_classifier.py — ML-based aDNA read classifier.
-
-Trains three Transformer classifiers to distinguish ancient (damaged) reads
-from modern (undamaged) reads, without needing a reference genome.
-
-Model variants trained in one run:
-  A) Seq-only               — sequence and position only, no external signal
-  B) Evo2 (per-base)        — + Evo2 P(C)/P(G) at damage-prone positions (4 features)
-  C) Evo2 (per-base + LL)   — + per-read log-likelihood from Evo2 (5 features)
-
-Architecture:
-  - Token embedding + dual sinusoidal PE (forward + reverse distance from ends)
-  - 2-layer Transformer encoder + max+mean pooling
-  - Explicit damage features projected and added to pooled representation
-  - Focal loss (γ=2) + PR-AUC checkpoint + LR warmup + cosine annealing
-
-Labels:
-  1 = ancient  (read has at least one C→T or G→A damage substitution)
-  0 = modern   (read identical to reference — no damage)
-
-Outputs → outputs/results/
-    classifier_probs.npz     keys: labels, probs_seq, probs_evo_base, probs_evo_full
-
-Outputs → outputs/figures/
-    classifier.png
-    classifier_threshold_sweep.png
-
-Outputs → outputs/results/
-    classifier_summary.txt
-"""
+"""9_classifier.py — Train Transformer classifiers to distinguish ancient (damaged) from modern reads."""
 
 import argparse
 import json

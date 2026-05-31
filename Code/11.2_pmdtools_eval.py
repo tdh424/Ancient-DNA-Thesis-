@@ -1,37 +1,4 @@
-"""
-11.2_pmdtools_eval.py — PMDtools per-read evaluation on the oracle BAM.
-
-PMDtools (Skoglund 2014) is a reference-based per-read damage filter. It needs:
-  1. Alignment to a reference (BAM)
-  2. MD tags on each record (genomic-mismatch description)
-  3. Base quality scores
-
-Our simulated FASTA has none of (1)–(3) natively, so we make them all
-explicit and reproducible. The choices below are *deliberate* — we want
-PMDtools to have the strongest possible signal so that the gap between
-PMDtools and our reference-free classifier variants quantifies what
-reference information adds, not the cost of degraded inputs.
-
-Design choices and justification
-─────────────────────────────────
-(i) Oracle alignment.
-    We reuse data/pydamage/oracle/test_aligned.bam, which aligns each test
-    read back to its known source genome (the same setup as the BWA
-    denoiser variant in Section 4.2.3). The de novo MEGAHIT assembly used
-    by pyDamage in §5.5 yields too-short contigs and would penalise
-    PMDtools for assembly errors rather than its own scoring model.
-
-(ii) MD tags added with pysam.calmd. Deterministic from the alignment.
-
-(iii) Fake base qualities at Phred 23 (≈ 0.5 % error rate). This matches
-     the per-base substitution rate applied in the simulation
-     (Section 3.2.1). A sensitivity scan over Phred 15 / 20 / 23 / 30 / 40
-     gives ROC-AUC in the range 0.77–0.79 (Table at bottom of this file),
-     so the result is not driven by the quality choice.
-
-The script writes:
-  outputs/results/pmdtools_oracle.txt  — text summary
-"""
+"""11.2_pmdtools_eval.py — PMDtools per-read evaluation on the oracle BAM."""
 from pathlib import Path
 import subprocess
 import sys

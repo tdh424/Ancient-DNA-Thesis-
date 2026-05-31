@@ -1,26 +1,4 @@
-"""
-14_per_source_auc.py — Per-source classifier evaluation.
-
-Answers the methodological concern raised by the supervisor: is the classifier
-actually detecting damage, or is it using compositional differences between
-contamination sources (bacterial vs human vs environmental)?
-
-For each ML variant we compute ROC-AUC under four restrictions of the test set:
-
-    overall          — all reads (ancient bacterial vs all modern sources)
-    bact-vs-bact     — ancient bacterial vs modern bacterial (no composition cue;
-                       only damage can drive the score)
-    bact-vs-human    — ancient bacterial vs modern human (large composition gap)
-    bact-vs-env      — ancient bacterial vs modern environmental (medium gap)
-
-Reads:
-    data/test.npz                              with `sources` field
-    outputs/results/classifier_probs.npz       with probs_*
-
-Outputs:
-    outputs/results/per_source_auc.txt
-    outputs/figures/per_source_auc.png
-"""
+"""12_per_source_auc.py — Per-source classifier AUC (bacterial vs human vs environmental)."""
 
 from pathlib import Path
 

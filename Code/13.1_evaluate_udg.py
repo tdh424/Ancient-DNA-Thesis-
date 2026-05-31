@@ -1,27 +1,4 @@
-"""
-17_evaluate_udg.py — Cross-protocol evaluation of trained classifier models on
-a UDG-treated test set.
-
-The trained classifier models were learned on non-UDG data (with both terminal
-and interior C→T deamination). This script measures how well they generalise
-to a UDG test set, where interior deaminations are absent (matching UDG-half
-laboratory protocol).
-
-Reads:
-    data/test.npz                              — original (non-UDG) test set
-    data/test_udg.npz                          — UDG-treated test set
-    outputs/models/denoiser_*.pt               — trained denoiser checkpoints
-    outputs/models/config_*.json
-    outputs/results/classifier_probs.npz       — non-UDG classifier predictions
-
-Outputs:
-    outputs/results/udg_evaluation.txt
-    outputs/figures/udg_evaluation.png
-
-Note: this script re-runs the trained classifier (10_classifier.py) on the new
-test_udg.npz. For a quick first-look it can also report the simple Briggs LLR
-score on UDG, since that requires no model re-load.
-"""
+"""13.1_evaluate_udg.py — Cross-protocol evaluation of trained models on a UDG test set."""
 
 import json
 from pathlib import Path

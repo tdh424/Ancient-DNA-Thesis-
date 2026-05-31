@@ -1,15 +1,4 @@
-"""
-17_seqerror_robustness.py — Sequencing-error robustness analysis.
-
-Tests how robust the trained classifier and denoiser are to varying levels of
-sequencing noise. The training set has a fixed 0.5% per-base error; this
-script injects ADDITIONAL random substitutions into the test set at rates
-0.0, 0.5, 1.0, 2.0, 3.0% and measures the resulting drop in ROC-AUC and PR-AUC.
-
-Outputs:
-    outputs/results/seqerror_robustness.txt
-    outputs/figures/seqerror_robustness.png
-"""
+"""17_seqerror_robustness.py — Sequencing-error robustness of the classifier and denoiser."""
 
 from pathlib import Path
 

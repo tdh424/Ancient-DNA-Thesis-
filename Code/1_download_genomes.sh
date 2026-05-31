@@ -1,17 +1,5 @@
 #!/bin/bash
-# 1_download.sh — Download bacterial reference genomes from NCBI in parallel.
-#
-# Fetches accession list first, then downloads PARALLEL genomes simultaneously.
-# Individual downloads avoid large ZIP HTTP/2 stream errors.
-#
-# Usage:
-#   bash Code/1_download_genomes.sh <n_genomes> [parallel_jobs]
-#
-# Example:
-#   bash Code/1_download_genomes.sh 1000       # 1000 genomes, 8 parallel (default)
-#   bash Code/1_download_genomes.sh 1000 16    # 1000 genomes, 16 parallel (~30-45 min)
-#
-# Output → data/genomes/ncbi_dataset/data/<accession>/<accession>.fna
+# 1_download_genomes.sh — Download bacterial reference genomes from NCBI in parallel.
 
 set -euo pipefail
 

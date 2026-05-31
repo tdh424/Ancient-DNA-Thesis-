@@ -1,24 +1,4 @@
-"""
-12_denoiser_errors.py — Error analysis for the denoiser.
-
-Answers the questions Line raised about why the denoiser is not useful:
-
-  1. How often does the model PREDICT a change vs do nothing?
-  2. Of predicted changes, how many are correct vs spurious?
-  3. Per-base-class breakdown:  C→T detection, G→A detection, false flips
-  4. Per-position breakdown along the 5' / 3' end
-  5. Confusion matrix at the chosen probability threshold
-
-Reads outputs/results/test_denoised_<variant>.npz produced by 6_denoise.py.
-
-Usage:
-    python Code/8.3_denoiser_errors.py                 # default variant 'evo2'
-    python Code/8.3_denoiser_errors.py --variant baseline
-
-Outputs:
-    outputs/figures/denoiser_errors_<variant>.png
-    outputs/results/denoiser_errors_<variant>.txt
-"""
+"""8.3_denoiser_errors.py — Error analysis of the denoiser's predicted changes."""
 
 import argparse
 from pathlib import Path

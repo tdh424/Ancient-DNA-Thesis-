@@ -1,22 +1,4 @@
-"""
-7_denoise.py — Apply a trained denoiser to the test set.
-
-Loads the best checkpoint from Code/6_train_denoiser.py and runs inference on
-the test split. Corrects T->C (C->T deamination) where P(C) > THRESHOLD and
-A->G (G->A) where P(G) > THRESHOLD.
-
-When --seeds N>1 is given the script averages the per-position probabilities
-across N seed-checkpoints before thresholding (ensemble inference).
-
-Usage:
-    python Code/7_denoise.py --variant evo2
-    python Code/7_denoise.py --variant udg
-    python Code/7_denoise.py --variant evo2 --seeds 42 43 44
-
-Outputs:
-    outputs/results/test_denoised_{variant}.npz
-      keys: damaged, clean, denoised, prob_c, prob_g, lengths
-"""
+"""7_denoise.py — Apply a trained denoiser to the test set."""
 
 import argparse
 import json

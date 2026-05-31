@@ -1,22 +1,5 @@
 #!/bin/bash
-# 1b_download_contam.sh — Download contamination references for realistic
-# ancient-DNA library simulation (Setup B).
-#
-# Empirical aDNA libraries from bone/dental calculus typically contain:
-#   - 5–30%   endogenous bacterial         (damaged — already downloaded by 1_download.sh)
-#   - 30–70%  human contamination          (handlers, lab) — UNDAMAGED
-#   - 10–40%  environmental bacteria       (soil, fungi)   — UNDAMAGED
-#
-# This script downloads:
-#   1. Human chromosome 21 (~48 Mbp) — representative of human contamination
-#   2. 10 common soil / environmental bacterial genomes
-#
-# Usage:
-#   bash Code/1.1_download_contam.sh
-#
-# Outputs:
-#   data/contam/human/chr21.fna
-#   data/contam/env/<accession>/<accession>.fna  (×10)
+# 1.1_download_contam.sh — Download human chr21 and environmental bacteria as modern contamination references.
 
 set -euo pipefail
 

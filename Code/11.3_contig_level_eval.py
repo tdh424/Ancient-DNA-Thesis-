@@ -1,24 +1,4 @@
-"""
-11.3_contig_level_eval.py — Contig-level damage detection.
-
-pyDamage is natively a contig-level tool. Mapping its predictions back to
-individual reads (Section 5.5) penalises pyDamage for solving a different
-problem than the one it was designed for. This script reports both pieces
-of the picture:
-
-  (1) pyDamage on its own home turf — one prediction per contig
-  (2) Our per-read classifier aggregated to the contig level
-      (mean-pool of per-read ancient probabilities over the reads that
-       align to a given contig)
-
-For each contig we use as ground truth the *fraction of ancient reads
-among the reads that align to it*; a contig is labelled ancient if at
-least half of its aligned reads carry at least one realised Briggs damage
-event.
-
-Outputs:
-  outputs/results/contig_level_eval.txt
-"""
+"""11.3_contig_level_eval.py — Contig-level damage detection: pyDamage vs aggregated classifier."""
 from pathlib import Path
 import numpy as np
 import pandas as pd

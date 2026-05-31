@@ -1,15 +1,4 @@
-"""
-16_damage_stats.py — Verify that the simulated dataset has the intended
-post-mortem damage profile.
-
-Measures per-position C->T and G->A frequencies in the test split and
-compares them to the theoretical Briggs curve. Also reports overall damage
-rates and per-source statistics.
-
-Outputs:
-    outputs/results/damage_stats.txt
-    outputs/figures/damage_stats.png
-"""
+"""16_damage_stats.py — Verify the simulated dataset's damage profile against the Briggs curve."""
 
 from pathlib import Path
 

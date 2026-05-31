@@ -1,25 +1,5 @@
 #!/bin/bash
-# 16_run_udg_test.sh — Generate a UDG-treated test dataset for cross-protocol
-# evaluation, then evaluate trained models on it.
-#
-# Idea: re-run the simulation pipeline with `UDG=true` (interior C→T removed,
-# only terminal damage retained), but only for the test split, writing outputs
-# into separate `data/raw_udg/` and `data/test_udg.npz` so the original
-# training data is untouched.
-#
-# Pre-requisites:
-#   - Trained models exist (denoiser_*.pt, classifier_probs*.npz)
-#   - Conda env `ancient-dna` activated
-#   - samtools loaded
-#
-# Usage:
-#   bash Code/13_run_udg_test.sh
-#
-# Outputs:
-#   data/raw_udg/test/{clean,damaged}.fasta
-#   data/test_udg.npz
-#   outputs/results/udg_evaluation.txt
-#   outputs/figures/udg_evaluation.png
+# 13_run_udg_test.sh — Generate a UDG-treated test set and evaluate trained models on it.
 
 set -euo pipefail
 

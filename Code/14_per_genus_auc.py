@@ -1,20 +1,4 @@
-"""
-14_per_genus_auc.py — Per-cluster classifier performance.
-
-Cross-references test-set predictions with the Mash cluster assignments in
-data/genomes/split_assignment.tsv to measure whether the classifier performs
-uniformly across phylogenetic groups, or whether some clusters are easier or
-harder than others.
-
-Mapping reads back to source genomes uses the BAM file produced by the
-oracle-mode pyDamage benchmark (data/pydamage/oracle/test_aligned.bam) —
-each aligned read's reference contig name resolves to an accession,
-which maps to a cluster.
-
-Outputs:
-    outputs/results/per_cluster_auc.txt
-    outputs/figures/per_cluster_auc.png
-"""
+"""14_per_genus_auc.py — Per-cluster classifier performance across phylogenetic groups."""
 
 from pathlib import Path
 from collections import defaultdict

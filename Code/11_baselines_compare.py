@@ -1,28 +1,4 @@
-"""
-11_baselines.py — Baseline classifiers compared against all ML variants.
-
-Implements two reference-free baselines:
-  1. Briggs LLR (PMDtools / ngsBriggs scoring model)
-     Uses the Briggs (2007) exponential decay model with the exact parameters
-     from the simulation (v=0.03, l=0.4, d=0.01, s=0.45). Applied directly
-     to NPZ reads — no alignment required.
-
-  2. pyDamage (optional, real implementation)
-     Requires a BAM file from run_pydamage.sh.  Gives per-contig damage
-     probability mapped to per-read labels via FASTA header matching.
-
-All three ML classifier variants (Seq-only, Evo2 per-base, Evo2 per-base+LL)
-are loaded from classifier_probs.npz and plotted together with the baselines
-so results can be compared on the same axes.
-
-Usage:
-    python Code/11_baselines_compare.py                             # Briggs LLR only
-    python Code/11_baselines_compare.py --pydamage PATH/results.csv
-
-Outputs:
-    outputs/figures/baselines_comparison.png
-    outputs/results/baselines_comparison.txt
-"""
+"""11_baselines_compare.py — Compare reference-free baselines against the ML classifier variants."""
 
 import argparse
 from pathlib import Path

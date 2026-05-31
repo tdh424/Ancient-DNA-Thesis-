@@ -1,22 +1,4 @@
-"""
-16.2_taxonomic_skewness.py — Figure for Section 3.3.4.
-
-Shows the actual genus-level distribution of the 288 bacterial genomes used
-in this thesis. The genus name is extracted from the first FASTA header of
-each genome (organism name field). The figure has two panels:
-
-  Left  — Ranked genome count per genus. A few genera dominate.
-  Right — Histogram of genus sizes. Most genera contribute a single genome;
-          a small number of genera contribute many.
-
-No genus cap was applied during dataset construction. The figure documents
-the resulting skew honestly rather than presenting a hypothetical capped
-distribution that does not match what the models were trained on.
-
-Output:
-  outputs/figures/taxonomic_skewness_comparison.png
-  thesis/figures/taxonomic_skewness_comparison.png  (copy)
-"""
+"""16.2_taxonomic_skewness.py — Figure of the genus-level distribution of the bacterial genomes."""
 from collections import Counter
 from pathlib import Path
 import shutil

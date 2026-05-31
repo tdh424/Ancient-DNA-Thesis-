@@ -1,17 +1,4 @@
-"""
-13_denoiser_threshold_sweep.py — Threshold sweep across all denoiser variants.
-
-For each trained denoiser variant (seq_only, evo2, bwa), reads the saved
-prob_c / prob_g arrays from test_denoised_<variant>.npz and computes
-performance metrics across a fine grid of thresholds. No re-inference needed.
-
-Outputs:
-    outputs/figures/denoiser_threshold_sweep.png   4-panel comparison plot
-    outputs/results/denoiser_threshold_sweep.txt   per-model summary table
-
-Usage:
-    python Code/8.4_denoiser_threshold_sweep.py
-"""
+"""8.4_denoiser_threshold_sweep.py — Threshold sweep across all denoiser variants."""
 
 from pathlib import Path
 

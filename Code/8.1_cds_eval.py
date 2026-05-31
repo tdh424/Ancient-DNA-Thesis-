@@ -1,30 +1,4 @@
-"""
-8.1_cds_eval.py — Validate that bacterial reads carry a protein-coding signal.
-
-Bacterial genomes are ~85 % coding sequence (CDS); reads sampled from them
-should show a clear "is-coding" signature. The cleanest such signature is the
-**best-frame stop-codon rate**: a random DNA sequence has 3/64 ≈ 4.7 % stop
-codons in any frame, but a real CDS read in its correct reading frame has far
-fewer. Three sanity checks make this concrete:
-
-  1. **Per-frame stop rate** (bacterial clean reads). If the reads come from
-     coding regions, frame 0, 1 or 2 — whichever matches the original CDS —
-     should be much lower than the random baseline (~4.7 %), while the other
-     two should sit near it.
-  2. **Best-frame stop rate by source** (bact vs human vs random-shuffled).
-     Bact reads come from genomes that are mostly CDS; human reads come from
-     chr21, which is non-coding-dominated; random-shuffled reads are the
-     pure-noise baseline. If our metric is real, the order should be
-     bact < human < random.
-  3. **Best-frame stop rate, bact reads only**: clean vs damaged vs
-     random-shuffled. Damage pushes the rate up because C→T converts
-     CAA / CAG / CGA to the stop codons TAA / TAG / TGA. If clean << damaged
-     < random, the damage signal we are trying to detect is *causing* the
-     coding signal to degrade.
-
-Output → outputs/figures/cds_evaluation.png
-         outputs/results/cds_summary.txt
-"""
+"""8.1_cds_eval.py — Check that bacterial reads carry a protein-coding (stop-codon) signal."""
 
 from pathlib import Path
 import numpy as np

@@ -1,25 +1,4 @@
-"""
-18_extra_figures.py — additional analysis figures requested for thesis revision.
-
-Builds seven figures/tables that surface findings not directly visible in the
-existing per-script outputs:
-
-  A. C→T vs G→A damage-type separated performance (per-base PR-AUC).
-  B. Composition-decomposition table — how much of classifier AUC is real
-     damage signal vs. cross-source composition shortcut.
-  C. Per-source AUC stratified by realised damage event count (the "ceiling"
-     view — how easy is the read given how much damage it carries).
-  D. Reliability / calibration diagram — does P(ancient)=0.7 really mean
-     70 % ancient?
-  E. Cross-variant per-position recall comparison for the denoiser.
-  F. PMDtools per-source coverage and AUC — what fraction of each source
-     does PMDtools see, and how well does it score within that subset.
-  G. Contig-level confusion matrices (oracle and de-novo modes) for
-     pyDamage Borry-call vs. evo_full mean-pool.
-
-Output → outputs/figures/extra_*.png
-         outputs/results/extra_*.txt
-"""
+"""18_extra_figures.py — Additional analysis figures and tables for the thesis revision."""
 from pathlib import Path
 import numpy as np
 import matplotlib

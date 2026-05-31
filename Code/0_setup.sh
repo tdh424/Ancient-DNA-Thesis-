@@ -1,9 +1,5 @@
 #!/bin/bash
-# 0_setup.sh — Build Gargammel and verify all dependencies.
-# Run this ONCE manually before anything else.
-#
-# Usage:
-#   bash Code/0_setup.sh
+# 0_setup.sh — Build Gargammel and verify dependencies. Run once before anything else.
 
 set -euo pipefail
 
