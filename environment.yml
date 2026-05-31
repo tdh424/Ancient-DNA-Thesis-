@@ -1,5 +1,7 @@
 name: ancient-dna
 channels:
+  - pytorch
+  - nvidia
   - conda-forge
   - bioconda
   - defaults
@@ -17,6 +19,7 @@ dependencies:
   - msprime
   - openblas
   - pytorch
+  - pytorch-cuda=12.1
   - git
   - make
   - curl
@@ -27,9 +30,13 @@ dependencies:
   - zlib
   - perl
   - openjdk
+  - mash
   - bwa
   - samtools
+  - spades
   - pysam
+  - pmdtools
+  - pydamage
   - kraken2
   - ncbi-datasets-cli
   - scikit-learn

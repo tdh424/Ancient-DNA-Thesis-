@@ -29,8 +29,9 @@ from sklearn.metrics import (
     average_precision_score, roc_auc_score,
     precision_recall_fscore_support, matthews_corrcoef,
 )
+from project_root import project_root
 
-ROOT = Path('/home/tdh424/Ancient-DNA')
+ROOT = project_root()
 RES  = ROOT / 'outputs/results'
 FIG  = ROOT / 'outputs/figures'
 

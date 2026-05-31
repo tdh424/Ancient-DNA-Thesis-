@@ -44,8 +44,9 @@ from sklearn.metrics import (
     precision_recall_fscore_support,
     matthews_corrcoef,
 )
+from project_root import project_root
 
-ROOT = Path('/home/tdh424/Ancient-DNA')
+ROOT = project_root()
 BAM_IN   = ROOT / 'data/pydamage/oracle/test_aligned.bam'
 REF      = ROOT / 'data/pydamage/oracle/reference.fa'
 FASTA    = ROOT / 'data/raw/test/damaged.fasta'

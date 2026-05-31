@@ -25,8 +25,9 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
+from project_root import project_root
 
-ROOT       = Path('/home/tdh424/Ancient-DNA')
+ROOT       = project_root()
 GENOME_DIR = ROOT / 'data/genomes/ncbi_dataset/data'
 OUT_FIG    = ROOT / 'outputs/figures/taxonomic_skewness_comparison.png'
 THESIS_FIG = ROOT / 'thesis/figures/taxonomic_skewness_comparison.png'

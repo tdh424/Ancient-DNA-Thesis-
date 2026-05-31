@@ -29,8 +29,9 @@ from sklearn.metrics import (
     precision_recall_fscore_support,
     matthews_corrcoef,
 )
+from project_root import project_root
 
-ROOT = Path('/home/tdh424/Ancient-DNA')
+ROOT = project_root()
 NPZ  = ROOT / 'data/test.npz'
 FASTA = ROOT / 'data/raw/test/damaged.fasta'
 OUT_FILE = ROOT / 'outputs/results/contig_level_eval.txt'

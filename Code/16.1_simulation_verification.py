@@ -29,8 +29,9 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from project_root import project_root
 
-ROOT = Path('/home/tdh424/Ancient-DNA')
+ROOT = project_root()
 NPZ  = ROOT / 'data/test.npz'
 OUT_FIG  = ROOT / 'outputs/figures/simulation_verification.png'
 THESIS_FIG = ROOT / 'thesis/figures/simulation_verification.png'
