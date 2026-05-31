@@ -24,7 +24,7 @@
 #   bash run.sh --skip-evo2            # ref_evo2 already in NPZ files
 #   bash run.sh --skip-bwa             # ref_bwa already in NPZ files
 #   bash run.sh --skip-pydamage        # skip pyDamage benchmark
-#   bash run.sh --skip-read-baselines  # skip PMDtools / ngsBriggs
+#   bash run.sh --skip-read-baselines  # skip PMDtools
 
 set -e
 
@@ -261,7 +261,7 @@ echo "Submitted: 6.4 Classifier merge      → job $JOB_CLF"
 # ─────────────────────────────────────────────────────────────────────────────
 # STAGE 7.1: pyDamage benchmark — oracle reference (CPU).
 # STAGE 7.2: pyDamage benchmark — de novo assembly with MetaSPAdes (CPU).
-# STAGE 7.3: PMDtools + ngsBriggs (CPU) — runs in parallel with 7.1/7.2.
+# STAGE 7.3: PMDtools (CPU) — runs in parallel with 7.1/7.2.
 # ─────────────────────────────────────────────────────────────────────────────
 DEP_PYD=""
 PYD_FLAG=""
@@ -304,10 +304,9 @@ if [ "$SKIP_READ_BASELINES" = false ]; then
         --wrap="$WRAP_HEADER
 module load bwa/0.7.17 samtools/1.20 2>/dev/null || true
 bash Code/10.2_run_read_baselines.sh")
-    echo "Submitted: 7.3 PMDtools + ngsBriggs  → job $JOB_RB"
+    echo "Submitted: 7.3 PMDtools             → job $JOB_RB"
     DEP_RB="afterok:$JOB_RB"
-    RB_FLAG="--pmdtools data/read_baselines/pmdtools_scores.csv \
-             --ngsbriggs data/read_baselines/ngsbriggs_scores.csv"
+    RB_FLAG="--pmdtools data/read_baselines/pmdtools_scores.csv"
 else
     echo "Skipping : 7.3 Read baselines (--skip-read-baselines)"
 fi

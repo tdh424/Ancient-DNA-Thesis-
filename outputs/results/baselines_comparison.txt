@@ -8,7 +8,7 @@ Briggs LLR formula (reference-free, Briggs 2007):
   p_GA(k) = s·λ^k + d  (G→A rate at 3'-position k)
   Parameters: s=0.6815, λ=0.359, d=0.00937, v=0.0241
 
-Note: PMDtools / ngsBriggs condition on the reference base (C or G) at each
+Note: PMDtools conditions on the reference base (C or G) at each
   aligned position. The reference-free version used here scores ALL T/A
   positions, which is noisier but requires no prior mapping step.
 

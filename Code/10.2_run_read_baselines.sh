@@ -1,5 +1,5 @@
 #!/bin/bash
-# 10.2_run_read_baselines.sh — Run PMDtools and ngsBriggs read-level benchmarks on the test split.
+# 10.2_run_read_baselines.sh — Run the PMDtools read-level benchmark on the test split.
 
 set -euo pipefail
 
@@ -14,19 +14,15 @@ mkdir -p "$WORK_DIR"
 
 # ── Resolve tools ────────────────────────────────────────────────────────────
 # Add user-installed tool dirs explicitly (SLURM jobs don't source ~/.bashrc)
-export PATH="$HOME/tools/PMDtools:$HOME/tools/ngsBriggs:$PATH"
+export PATH="$HOME/tools/PMDtools:$PATH"
 
 need() {
     if ! command -v "$1" &>/dev/null; then
-        echo "ERROR: $1 not on PATH. See script header for install instructions."
+        echo "ERROR: $1 not on PATH."
         exit 1
     fi
 }
 need bwa; need samtools; need pmdtools
-NGSBRIGGS=$(command -v ngsBriggs || true)
-if [ -z "$NGSBRIGGS" ]; then
-    echo "WARNING: ngsBriggs not on PATH — will skip it."
-fi
 
 # ── Get / build BAM ──────────────────────────────────────────────────────────
 BAM="$WORK_DIR/test_aligned.bam"
@@ -81,34 +77,8 @@ if [ ! -f "$PMD_OUT" ]; then
     echo "  Wrote $PMD_OUT ($(($(wc -l < "$PMD_OUT") - 1)) reads)"
 fi
 
-# ── ngsBriggs (Zhao 2024) ────────────────────────────────────────────────────
-if [ -n "$NGSBRIGGS" ]; then
-    NGB_OUT="$WORK_DIR/ngsbriggs_scores.csv"
-    if [ ! -f "$NGB_OUT" ]; then
-        echo "Running ngsBriggs..."
-        # ngsBriggs writes per-read posteriors to a TSV with the -bdamage
-        # flag. Exact CLI varies between versions; user may need to adjust.
-        "$NGSBRIGGS" \
-            --bam "$BAM" \
-            --ref "$REF" \
-            --threads "$THREADS" \
-            --out "$WORK_DIR/ngsbriggs_raw" || {
-                echo "  ngsBriggs failed — check CLI flags for your version."
-                NGSBRIGGS=""
-            }
-        # Convert ngsBriggs' raw output to our CSV format
-        if [ -n "$NGSBRIGGS" ] && [ -f "$WORK_DIR/ngsbriggs_raw.posteriors.tsv" ]; then
-            awk 'BEGIN{print "read_id,posterior_ancient"}
-                 NR>1 {print $1","$NF}' \
-                "$WORK_DIR/ngsbriggs_raw.posteriors.tsv" > "$NGB_OUT"
-            echo "  Wrote $NGB_OUT"
-        fi
-    fi
-fi
-
 echo ""
 echo "Done. Now run:"
 echo "  python Code/11_baselines_compare.py \\"
 echo "      --pmdtools $PMD_OUT \\"
-[ -n "$NGSBRIGGS" ] && echo "      --ngsbriggs $WORK_DIR/ngsbriggs_scores.csv \\"
 echo "      --pydamage data/pydamage/oracle/results/pydamage_results.csv"

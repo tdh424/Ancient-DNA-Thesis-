@@ -207,8 +207,6 @@ def main():
                         help='pydamage_results.csv from MODE=denovo (MEGAHIT)')
     parser.add_argument('--pmdtools',  type=Path, default=None,
                         help='Path to pmdtools_scores.csv (Code/10.2_run_read_baselines.sh)')
-    parser.add_argument('--ngsbriggs', type=Path, default=None,
-                        help='Path to ngsbriggs_scores.csv (Code/10.2_run_read_baselines.sh)')
     args = parser.parse_args()
 
     (OUT_DIR / 'figures').mkdir(parents=True, exist_ok=True)
@@ -281,7 +279,7 @@ def main():
                       f'  ({valid.sum():,} reads)')
                 models['pyDamage (de novo)'] = pd_probs
 
-    # ── PMDtools / ngsBriggs (read-level, reference-based) ───────────────────
+    # ── PMDtools (read-level, reference-based) ───────────────────────────────
     def load_read_csv(csv_path, score_col, fasta_path):
         """Match per-read scores to NPZ rows by sequence identity."""
         import pandas as pd
@@ -304,8 +302,7 @@ def main():
         return probs, valid
 
     for name, path, score_col, color, ls in [
-        ('PMDtools',  args.pmdtools,  'pmds',              '#8e44ad', ':'),
-        ('ngsBriggs', args.ngsbriggs, 'posterior_ancient', '#16a085', ':'),
+        ('PMDtools',  args.pmdtools,  'pmds', '#8e44ad', ':'),
     ]:
         if path and path.exists():
             print(f'\nLoading {name} results from {path}...')
@@ -326,7 +323,7 @@ def main():
 
     # Display order: best ML models first, baselines last
     order = [n for n in [*ML_MODELS.values(),
-                         'Briggs LLR', 'pyDamage', 'PMDtools', 'ngsBriggs']
+                         'Briggs LLR', 'pyDamage', 'PMDtools']
              if n in models]
 
     # ── Figure ────────────────────────────────────────────────────────────────
@@ -429,7 +426,7 @@ def main():
         '  p_GA(k) = s·λ^k + d  (G→A rate at 3\'-position k)',
         f'  Parameters: s={BRIGGS_S}, λ={BRIGGS_L}, d={BRIGGS_D}, v={BRIGGS_V}',
         '',
-        'Note: PMDtools / ngsBriggs condition on the reference base (C or G) at each',
+        'Note: PMDtools conditions on the reference base (C or G) at each',
         '  aligned position. The reference-free version used here scores ALL T/A',
         '  positions, which is noisier but requires no prior mapping step.',
         '',
@@ -449,7 +446,7 @@ def main():
     lines += [
         '',
         'Note on [evaluated on aligned subset] rows:',
-        '  PMDtools and ngsBriggs only score reads that align to the oracle',
+        '  PMDtools only scores reads that align to the oracle',
         '  reference (~63 % of the test set). The ROC/PR-AUC for those rows',
         '  is therefore on the aligned subset, which has a different ancient',
         '  prevalence (~39 %) than the full test set (25 %). Use the standalone',
