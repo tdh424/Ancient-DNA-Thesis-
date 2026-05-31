@@ -29,10 +29,8 @@ def rev_comp(seq):
 
 
 def load_evo2(model_name, device):
-    # PyTorch 2.4+ defaults torch.load to weights_only=True which rejects
-    # the Evo2 checkpoint's custom unpicklers. We force weights_only=False
-    # because the checkpoint comes from arcinstitute/evo2_7b on HuggingFace
-    # — a trusted source.
+    # PyTorch 2.4+ defaults torch.load to weights_only=True; force False to
+    # load the Evo2 checkpoint's custom unpicklers.
     import torch as _torch
     _orig_load = _torch.load
     def _patched_load(*a, **kw):
@@ -168,10 +166,6 @@ def compute_soft_refs(sequences, L, evo2_obj, index_map, device, batch_size, dty
 
 def process_split(name, evo2_obj, index_map, device, batch_size, dtype, do_rc):
     path = DATA_DIR / f'{name}.npz'
-    if not path.exists():
-        print(f'  {name}: {path} not found — run 4_build_dataset.py first.')
-        return
-
     d = np.load(path)
     if 'ref_evo2' in d:
         print(f'  {name}: ref_evo2 already present — skipping.')

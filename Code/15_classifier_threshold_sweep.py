@@ -37,9 +37,6 @@ def metrics_at(probs, labels, t):
 
 
 def main():
-    if not PROBS_FILE.exists():
-        raise SystemExit(f'{PROBS_FILE} not found — train the classifier first.')
-
     d      = np.load(PROBS_FILE)
     labels = d['labels']
     print(f'Test set: {len(labels):,} reads ({labels.mean()*100:.1f}% ancient)')

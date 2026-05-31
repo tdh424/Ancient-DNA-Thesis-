@@ -1,5 +1,4 @@
 """11.3_contig_level_eval.py — Contig-level damage detection: pyDamage vs aggregated classifier."""
-from pathlib import Path
 import numpy as np
 import pandas as pd
 import pysam
@@ -26,11 +25,8 @@ MODES = {
         'pyd': ROOT / 'data/pydamage/denovo/results/pydamage_results.csv',
     },
 }
-# Two label definitions are reported:
-#   - "any":     contig contains any ancient reads (rarely useful — too lax)
-#   - "enrich":  ancient fraction >= 25 % matches the population prevalence,
-#                so a contig over this threshold is enriched in ancient reads
-#                relative to the test set as a whole.
+# Two label definitions: "any" (contig has any ancient reads) and "enrich"
+# (ancient fraction >= 25 %, the population prevalence).
 LABEL_THRESH = 0.25
 
 
@@ -118,9 +114,8 @@ def eval_mode(mode: str, name_to_idx, labels, probs):
     print(f'  Contigs with ≥1 aligned read: {len(per)}')
 
     pyd = pd.read_csv(cfg['pyd'])
-    # Keep qvalue and pdj alongside predicted_accuracy and pvalue so we can
-    # apply the Borry 2021 binary call threshold (q ≤ 0.05, pdj ≤ 0.6,
-    # predicted_accuracy ≥ 0.67) below.
+    # Keep qvalue and pdj alongside predicted_accuracy and pvalue for the
+    # binary call threshold (q ≤ 0.05, pdj ≤ 0.6, predicted_accuracy ≥ 0.67).
     keep_cols = ['reference', 'predicted_accuracy', 'pvalue', 'qvalue']
     if 'pdj' in pyd.columns:
         keep_cols.append('pdj')
@@ -155,11 +150,9 @@ def eval_mode(mode: str, name_to_idx, labels, probs):
         print(f'  {name:<32}  ROC={r["ROC"]:.3f}  PR={r["PR"]:.3f}  '
               f'MCC={r["MCC"]:.3f}  F1={r["F1"]:.3f}')
 
-    # ── Borry 2021 recommended binary call ──────────────────────────────
-    # Apply the exact filter from Borry et al. (2021) so we can report what
-    # pyDamage itself would call "damaged" with its own recommended
-    # thresholds, not just a swept ROC-AUC. This is the apples-to-apples
-    # "pyDamage as the authors use it" baseline.
+    # ── pyDamage binary call ────────────────────────────────────────────
+    # Apply pyDamage's recommended filter (q ≤ 0.05, pdj ≤ 0.6,
+    # predicted_accuracy ≥ 0.67) for its own "damaged" call.
     if 'qvalue' in merged.columns:
         borry_call = (
             (merged['qvalue'] <= 0.05) &

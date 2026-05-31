@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 DATA_DIR = Path('data')
 OUT_DIR  = Path('outputs')
 
-# Briggs parameters from Code/3_simulate.sh (Vi-33.16 Neanderthal fit)
+# Briggs parameters — must match Code/3_simulate.sh
 BRIGGS_S = 0.6815
 BRIGGS_L = 0.3590
 BRIGGS_D = 0.00937
@@ -18,7 +18,7 @@ A, C, G, T = 1, 2, 3, 4
 
 
 def theoretical_briggs(positions, s=BRIGGS_S, lam=BRIGGS_L, d=BRIGGS_D):
-    """Briggs (2007) deamination frequency as a function of distance from end."""
+    """Briggs deamination frequency as a function of distance from end."""
     return s * (lam ** positions) + d
 
 
@@ -48,9 +48,6 @@ def per_position_rate(damaged, clean, lengths, from_base, to_base, end='5p'):
 
 def main():
     test_npz = DATA_DIR / 'test.npz'
-    if not test_npz.exists():
-        raise SystemExit(f'{test_npz} not found.')
-
     d = np.load(test_npz)
     damaged = d['damaged'].astype(np.int32)
     clean   = d['clean'].astype(np.int32)

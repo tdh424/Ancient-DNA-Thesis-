@@ -278,10 +278,8 @@ def train_one(variant, size, seed):
     va_x, va_y, va_r, va_l = load_split('val',   variant)
     log(f'  Train: {len(tr_x):,}   Val: {len(va_x):,}')
 
-    # Length-bucketed, class-balanced sampler.
-    # Each training batch is drawn from a single length quantile bucket and
-    # preserves the natural ancient/modern prevalence. The validation loader
-    # is a plain sequential loader so reported metrics are deterministic.
+    # Length-bucketed, class-balanced training sampler; sequential val loader
+    # for deterministic metrics.
     from length_bucketed_sampler import build_loader as build_bucketed_loader
     tr_labels = ((tr_x != tr_y).any(dim=1) & (tr_x.sum(dim=1) > 0)).cpu().numpy().astype(np.int64)
     tr_loader = build_bucketed_loader(

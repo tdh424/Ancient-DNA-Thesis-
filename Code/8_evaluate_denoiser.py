@@ -94,7 +94,7 @@ def main():
         if path.exists():
             available[variant] = path
     if not available:
-        log('ERROR: No test_denoised_{variant}.npz found. Run 6_denoise.py first.')
+        log('ERROR: No test_denoised_{variant}.npz found. Run 7_denoise.py first.')
         return
     log(f'Found denoised results for variants: {list(available.keys())}')
 

@@ -25,7 +25,7 @@ IDX_TO_SOURCE = {v: k for k, v in SOURCE_TO_IDX.items()}
 
 
 def header_to_source(header):
-    """Map FASTA header → source code. HUMAN_/ENV_ prefixes set by 2b_simulate_contam.sh."""
+    """Map FASTA header → source code. HUMAN_/ENV_ prefixes set by 3.1_simulate_contam.sh."""
     h = header.lstrip('>')
     if h.startswith('HUMAN_'): return SOURCE_TO_IDX['human']
     if h.startswith('ENV_'):   return SOURCE_TO_IDX['env']
@@ -49,11 +49,6 @@ def parse_fasta_with_source(path):
         yield ''.join(seq), src
 
 
-def parse_fasta(path):
-    for s, _ in parse_fasta_with_source(path):
-        yield s
-
-
 def encode(seq, length):
     """Encode a DNA string to a fixed-length uint8 array (PAD=0)."""
     arr = np.zeros(length, dtype=np.uint8)
@@ -66,11 +61,6 @@ def process_split(name):
     clean_path   = RAW_DIR / name / 'clean.fasta'
     damaged_path = RAW_DIR / name / 'damaged.fasta'
 
-    if not clean_path.exists() or not damaged_path.exists():
-        print(f'  {name}: missing FASTA files in {RAW_DIR}/{name}/ — skipping.')
-        print(f'         Run bash Code/3_simulate.sh first.')
-        return
-
     clean_records   = list(parse_fasta_with_source(clean_path))
     damaged_records = list(parse_fasta_with_source(damaged_path))
 
@@ -80,10 +70,8 @@ def process_split(name):
         n = min(len(clean_records), len(damaged_records))
         clean_records, damaged_records = clean_records[:n], damaged_records[:n]
 
-    # Encode (track per-read source). Reads shorter than MIN_LEN are discarded;
-    # reads longer than MAX_LEN are truncated to the first MAX_LEN bases. Truncation
-    # preserves the 5' end (where C->T damage is concentrated) and keeps modern
-    # contamination reads in the dataset at their realised length distribution.
+    # Encode and track per-read source. Reads < MIN_LEN are dropped; reads
+    # > MAX_LEN are truncated to the first MAX_LEN bases (preserving the 5' end).
     clean_out, damaged_out, lengths_out, source_out = [], [], [], []
     n_truncated = 0
     for (c, src_c), (d, src_d) in zip(clean_records, damaged_records):
@@ -121,14 +109,9 @@ def process_split(name):
           f'(total {len(sources_arr):,})')
 
     # ── Prevalence control (Setup B: realistic mixed library) ────────────────
-    # Ancient pool = bacterial reads with damage events (only bacterial reads
-    # were exposed to deamSim). Modern pool = everything else: human + env
-    # contamination + bacterial reads where Briggs produced no damage.
-    #
-    # We sub-sample WITHOUT discarding: bacterial reads dropped from the
-    # ancient pool are reverted to clean (damaged ← clean) so they remain in
-    # the dataset as 'modern bacterial commensal' reads — biologically the
-    # right behaviour and keeps total dataset size constant.
+    # Ancient pool = bacterial reads with damage; modern pool = everything else.
+    # Sub-sample without discarding: bacterial reads dropped from the ancient
+    # pool are reverted to clean (damaged ← clean) to keep dataset size constant.
     if DAMAGE_PREVALENCE is not None:
         rng = np.random.default_rng(42)
         N   = len(clean_arr)

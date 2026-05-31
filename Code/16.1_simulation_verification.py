@@ -1,5 +1,4 @@
 """16.1_simulation_verification.py — Verification figure of the final simulated test set (length + damage)."""
-from pathlib import Path
 import shutil
 
 import numpy as np

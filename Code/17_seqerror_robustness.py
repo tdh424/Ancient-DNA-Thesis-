@@ -6,7 +6,6 @@ import numpy as np
 import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import torch
-import torch.nn.functional as F
 from sklearn.metrics import roc_auc_score, average_precision_score
 
 DATA_DIR = Path('data')
@@ -50,11 +49,8 @@ def make_labels(damaged, clean):
 def evaluate_classifier_at_rate(rate, device, seeds=(42,)):
     """Inject extra errors, run ensemble of classifier checkpoints, return AUCs."""
     d       = np.load(DATA_DIR / 'test.npz')
-    # Labels reflect the *original* Briggs damage state of the read, not the
-    # post-noise state. Deriving labels from the noise-injected array shifts
-    # the positive prevalence with the noise level (random substitutions get
-    # counted as damage) and inflates PR-AUC — exactly the artefact that made
-    # the right-hand panel rise instead of fall.
+    # Labels reflect the original Briggs damage state, not the post-noise state,
+    # so injected substitutions are not miscounted as damage.
     labels  = make_labels(d['damaged'].astype(np.int64), d['clean'])
     damaged = inject_errors(d['damaged'].astype(np.int64), d['lengths'], rate)
     lengths = d['lengths'].astype(np.int64)

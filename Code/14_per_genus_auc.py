@@ -52,10 +52,7 @@ def build_seqid_to_gcf():
 
 def map_reads_to_clusters(bam_path, n_reads, acc_to_cluster, seqid_to_gcf):
     """For each aligned read, return its source genome's cluster id (-1 if unmapped)."""
-    try:
-        import pysam
-    except ImportError:
-        raise SystemExit('pysam required: pip install pysam')
+    import pysam
 
     cluster_per_read = np.full(n_reads, -1, dtype=np.int32)
     with pysam.AlignmentFile(str(bam_path), 'rb') as bam:
@@ -70,12 +67,6 @@ def map_reads_to_clusters(bam_path, n_reads, acc_to_cluster, seqid_to_gcf):
 
 
 def main():
-    if not SPLIT_TSV.exists():
-        raise SystemExit(f'{SPLIT_TSV} not found — run Code/2_cluster_genomes.py first.')
-    if not BAM_FILE.exists():
-        raise SystemExit(f'{BAM_FILE} not found — run Code/10.1_run_pydamage.sh first.')
-    if not PROBS_NPZ.exists():
-        raise SystemExit(f'{PROBS_NPZ} not found — train the classifier first.')
 
     probs    = np.load(PROBS_NPZ)
     labels   = probs['labels']
@@ -132,12 +123,6 @@ def main():
                      f'  {r["auc"]:>8.4f}')
 
     aucs = np.array([r['auc'] for r in rows])
-    if len(aucs) == 0:
-        lines += ['', 'No clusters had >=50 reads with both classes — nothing to summarize.']
-        out_txt = OUT_DIR / 'results' / 'per_cluster_auc.txt'
-        out_txt.write_text('\n'.join(lines))
-        print('\n'.join(lines))
-        raise SystemExit('No clusters to plot.')
     lines += [
         '',
         f'AUC summary: mean = {aucs.mean():.4f}, median = {np.median(aucs):.4f}, '

@@ -16,7 +16,7 @@ PAD, A, C, G, T = 0, 1, 2, 3, 4
 def load(variant):
     p = OUT_DIR / 'results' / f'test_denoised_{variant}.npz'
     if not p.exists():
-        raise SystemExit(f'ERROR: {p} not found — run 6_denoise.py first.')
+        raise SystemExit(f'ERROR: {p} not found — run 7_denoise.py first.')
     return np.load(p)
 
 
@@ -284,9 +284,7 @@ def main():
                     ha='center', va='bottom', fontsize=9)
     ax.set_xticks(xpos)
     ax.set_xticklabels(cats)
-    # Log-scale only if there are strictly positive values in *all* series
-    # plotted; otherwise matplotlib produces an undefined axis range that
-    # `bbox_inches='tight'` later bakes into a 100k-pixel-tall PNG.
+    # Use log scale only if all plotted series have positive values.
     pos_vals = [v for v in vals if v > 0]
     if overlay:
         pos_vals += [v for v in vals2 if v > 0]
@@ -409,9 +407,7 @@ def main():
 
     plt.tight_layout()
     out_png = OUT_DIR / 'figures' / f'denoiser_errors_{args.variant}.png'
-    # Drop `bbox_inches='tight'` — it included off-axis ticks/annotations in
-    # the bounding box for all-zero data (seq_only, udg) and rendered the
-    # PNG at 169k px tall.
+    # No bbox_inches='tight' here — it blew up the PNG height for all-zero data.
     fig.savefig(out_png, dpi=150)
     plt.close()
     print(f'Figure  → {out_png}')

@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from sklearn.metrics import roc_auc_score, average_precision_score
+from sklearn.metrics import roc_auc_score
 
 DATA_DIR = Path('data')
 OUT_DIR  = Path('outputs')
@@ -33,17 +33,8 @@ def auc_safe(y, p):
 def main():
     test_npz = DATA_DIR / 'test.npz'
     probs_npz = OUT_DIR / 'results' / 'classifier_probs.npz'
-    if not test_npz.exists():
-        raise SystemExit(f'ERROR: {test_npz} not found.')
-    if not probs_npz.exists():
-        raise SystemExit(f'ERROR: {probs_npz} not found — run the classifier first.')
-
     test  = np.load(test_npz)
     probs = np.load(probs_npz)
-
-    if 'sources' not in test:
-        raise SystemExit('ERROR: test.npz lacks the `sources` field. '
-                         'Re-run python Code/4_build_dataset.py.')
 
     sources = test['sources']
     labels  = probs['labels']

@@ -24,7 +24,7 @@ def log(msg=''):
     print(msg, flush=True)
 
 
-# ── Model (mirrors 5_train.py — must stay in sync) ───────────────────────────
+# ── Model (mirrors 6_train_denoiser.py — must stay in sync) ──────────────────
 
 class SinusoidalPE(nn.Module):
     def __init__(self, d_model, max_len=200):

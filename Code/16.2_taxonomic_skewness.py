@@ -1,6 +1,5 @@
 """16.2_taxonomic_skewness.py — Figure of the genus-level distribution of the bacterial genomes."""
 from collections import Counter
-from pathlib import Path
 import shutil
 
 import matplotlib

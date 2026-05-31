@@ -6,15 +6,14 @@ set -euo pipefail
 mkdir -p data/raw_udg/{train,val,test}
 
 # ── Step 1: bacterial endogenous reads with UDG damage (test split only) ────
-# We still need to walk all genomes to honour the homology-aware split, but
-# we'll only write out the 'test' split fragments. The others get tossed.
+# Walk all genomes for the homology-aware split, but only write the test split.
 echo "── Step 1: simulating UDG bacterial reads (test only)..."
 UDG=true \
 OUT_DIR=data/raw_udg \
 SPLITS=test \
 bash Code/3_simulate.sh
 
-# Empty out train/val so 2b_simulate_contam.sh and 3_dataset.py don't see them
+# Empty out train/val so 3.1_simulate_contam.sh and 4_build_dataset.py don't see them
 > data/raw_udg/train/clean.fasta || true
 > data/raw_udg/train/damaged.fasta || true
 > data/raw_udg/val/clean.fasta || true

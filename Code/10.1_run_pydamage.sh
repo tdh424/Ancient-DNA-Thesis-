@@ -12,14 +12,7 @@ SPLIT_TSV="data/genomes/split_assignment.tsv"
 
 mkdir -p "$WORK_DIR/results"
 
-for tool in bwa samtools pydamage; do
-    if ! command -v "$tool" &>/dev/null; then
-        echo "ERROR: $tool not on PATH."
-        exit 1
-    fi
-done
-
-# ── Choose reference: oracle (source genomes) or denovo (MEGAHIT) ────────────
+# ── Choose reference: oracle (source genomes) or denovo (MetaSPAdes) ─────────
 REF="$WORK_DIR/reference.fa"
 
 if [ "$MODE" = "oracle" ]; then
@@ -44,15 +37,9 @@ if [ "$MODE" = "oracle" ]; then
     fi
 
 elif [ "$MODE" = "denovo" ]; then
-    if ! command -v metaspades.py &>/dev/null && ! command -v spades.py &>/dev/null; then
-        echo "ERROR: metaspades.py / spades.py not on PATH. Install via:"
-        echo "    conda install -n ancient-dna -c bioconda spades"
-        exit 1
-    fi
     SPADES_BIN=$(command -v metaspades.py || command -v spades.py)
     if [ ! -f "${REF}.bwt" ]; then
-        # Match Borry 2021: MetaSPAdes with k = 21, 33, 45 (k-mers tuned for
-        # short ancient DNA molecules), then keep contigs ≥ 1000 bp.
+        # MetaSPAdes with k = 21, 33, 45 for short reads, then keep contigs ≥ 1000 bp.
         echo "Running de novo assembly with MetaSPAdes (k=21,33,45)..."
         ASSEMBLY_DIR="$WORK_DIR/assembly"
         rm -rf "$ASSEMBLY_DIR"
@@ -65,8 +52,7 @@ elif [ "$MODE" = "denovo" ]; then
             echo "ERROR: MetaSPAdes did not produce contigs.fasta."
             exit 1
         fi
-        # Filter to contigs ≥ 1000 bp (Borry 2021 threshold for downstream
-        # damage analysis).
+        # Filter to contigs ≥ 1000 bp for downstream damage analysis.
         python3 -c "
 from Bio import SeqIO
 kept = [r for r in SeqIO.parse('$RAW_CONTIGS', 'fasta') if len(r.seq) >= 1000]
@@ -88,10 +74,7 @@ else
 fi
 
 # ── Align test reads to the chosen reference ─────────────────────────────────
-# BWA aln parameters match Borry 2021 (and the Skoglund 2014 setup for
-# PMDtools): -n 0.01 (max edit-distance fraction), -o 2 (max gap opens),
-# -l 16500 (effectively disables seeding, since aDNA reads are too short
-# and damage-prone for BWA's default seed).
+# BWA aln for short aDNA reads: -n 0.01, -o 2, -l 16500 (seeding disabled).
 BAM="$WORK_DIR/test_aligned.bam"
 if [ ! -f "$BAM" ]; then
     echo "Aligning $RAW_DIR/damaged.fasta..."

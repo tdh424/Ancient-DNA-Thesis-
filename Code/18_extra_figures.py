@@ -1,12 +1,10 @@
 """18_extra_figures.py — Additional analysis figures and tables for the thesis revision."""
-from pathlib import Path
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from sklearn.metrics import (
-    average_precision_score, roc_auc_score,
-    precision_recall_fscore_support, matthews_corrcoef,
+    average_precision_score, roc_auc_score, matthews_corrcoef,
 )
 from project_root import project_root
 
@@ -47,16 +45,8 @@ def figure_A():
     ga_roc   = roc_auc_score(ga_label, ga_score)
     ga_prev  = ga_label.mean()
 
-    # Bayesian ceiling (already computed)
-    bay = (RES / 'bayesian_ceiling.txt').read_text()
-    # parse out NN numbers from that file as a cross-check
     log(f'  Evo2 denoiser C→T: ROC={ct_roc:.4f}  PR={ct_pr:.4f}  prev={ct_prev*100:.2f}%')
     log(f'  Evo2 denoiser G→A: ROC={ga_roc:.4f}  PR={ga_pr:.4f}  prev={ga_prev*100:.2f}%')
-    # NOTE: an earlier bayesian_ceiling.txt reported G→A NN PR-AUC = 0.020,
-    # but that file used a different (non-comparable) normalisation. The
-    # numbers computed here match the per-base PR-AUC reported in
-    # evaluation_summary.txt (Metric 3): C→T = 0.131, G→A = 0.138 — the model
-    # learned both damage types about equally well, NOT a 7× gap.
 
     # Figure: two-panel — PR-AUC and ROC-AUC bars per damage type
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
@@ -205,7 +195,6 @@ def figure_C():
     clean = d_test['clean']
     damaged = d_test['damaged']
     lengths = d_test['lengths']
-    sources = d_test['sources']
 
     # Realised damage events per read
     L = damaged.shape[1]
@@ -583,9 +572,8 @@ def figure_G():
                        pyd=ROOT / 'data/pydamage/denovo/results/pydamage_results.csv'),
     }
 
-    # 2 modes × 3 methods grid. The third column applies the Borry 2021
-    # recommended threshold (≥ 0.67) directly to evo_full's mean-pool
-    # probability, making it directly comparable to the pyDamage Borry call.
+    # 2 modes × 3 methods grid; the third column applies the 0.67 threshold to
+    # evo_full's mean-pool probability for comparison with the pyDamage call.
     fig, axes = plt.subplots(2, 3, figsize=(15, 10))
 
     for row, (mode, cfg) in enumerate(MODES.items()):
@@ -629,20 +617,10 @@ def figure_G():
 
         y = merged['label'].values
 
-        # pyDamage: also sweep best-MCC threshold for an apples-to-apples
-        # comparison, in addition to the recommended Borry 2021 binary call.
+        # pyDamage recommended binary call (q<=0.05, pdj<=0.6, predicted_accuracy>=0.67).
         borry = ((merged['qvalue'] <= 0.05) &
                  (merged.get('pdj', 0.0) <= 0.6) &
                  (merged['predicted_accuracy'] >= 0.67)).astype(int)
-        pyd_score = merged['predicted_accuracy'].values
-        best_mcc_pyd, best_t_pyd = -1, 0.5
-        for tau in np.linspace(0.05, 0.95, 91):
-            pred = (pyd_score >= tau).astype(int)
-            if pred.sum() == 0 or pred.sum() == len(pred):
-                continue
-            mcc = matthews_corrcoef(y, pred)
-            if mcc > best_mcc_pyd:
-                best_mcc_pyd, best_t_pyd = mcc, tau
 
         # evo_full mean-pool at MCC-optimal threshold (sweep)
         evo_score = merged['prob_mean'].values
@@ -655,9 +633,7 @@ def figure_G():
             if mcc > best_mcc:
                 best_mcc, best_t = mcc, tau
         evo_pred_mcc   = (evo_score >= best_t).astype(int)
-        # Apply Borry's nominal 0.67 threshold to our model's mean-pool
-        # probability. This is the closest analogue of "out-of-the-box"
-        # usage for our model — a fixed, pre-registered threshold.
+        # Apply the nominal 0.67 threshold to our model's mean-pool probability.
         evo_pred_borry = (evo_score >= 0.67).astype(int)
 
         # Confusion matrices

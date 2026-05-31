@@ -1,7 +1,6 @@
 """9_classifier.py — Train Transformer classifiers to distinguish ancient (damaged) from modern reads."""
 
 import argparse
-import json
 from pathlib import Path
 
 import numpy as np
@@ -458,10 +457,8 @@ def main():
             log('  No Evo2 reference — training sequence-only model only.')
             has_evo2 = False
 
-        # Length-bucketed, class-balanced sampler for training. Each training
-        # batch is drawn from a single length
-        # quantile bucket and preserves the natural ancient/modern prevalence.
-        # Val / test loaders stay sequential for deterministic evaluation.
+        # Length-bucketed, class-balanced training sampler; sequential val/test
+        # loaders for deterministic evaluation.
         from length_bucketed_sampler import build_loader as build_bucketed_loader
 
         def make_loader(dmg, lns, lbl, ref, shuffle):
@@ -564,9 +561,7 @@ def main():
             return  # Skip the unified plot/summary — they require all variants
 
     # ── Below: runs in --merge mode and in --variant=all mode ────────────────
-    # (Single-variant mode returned early above and skipped this section.)
-    # probs_map and labels are populated either from training (above) or from
-    # the merge step at the top of main().
+    # probs_map and labels come from training above or the merge step.
 
     # ── Compute stats for all trained models ──────────────────────────────────
     name_map = {'seq': MODEL_NAMES['seq'],

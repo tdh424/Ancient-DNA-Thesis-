@@ -9,10 +9,7 @@ from pathlib import Path
 
 import numpy as np
 
-try:
-    import pysam
-except ImportError:
-    sys.exit('pysam not found. Run: pip install pysam (inside conda env)')
+import pysam
 
 # ── Config ────────────────────────────────────────────────────────────────────
 DATA_DIR     = Path('data')
@@ -20,22 +17,11 @@ GENOME_DIR   = DATA_DIR / 'genomes' / 'ncbi_dataset' / 'data'
 SPLITS       = ['train', 'val', 'test']
 MAX_LEN      = 100
 
-# Same fractions as 2_simulate.sh
+# Same fractions as 3_simulate.sh
 TRAIN_FRAC   = 0.80
 VAL_END_FRAC = 0.90
 
-# BWA aln tuned for ~30-100 bp aDNA reads with Briggs damage.
-#   - n=0.04: max edit distance per read. Empirically n=0.10 gave a LOWER
-#     map rate than n=0.04 on this dataset (5.3% vs 6.6%), likely because
-#     BWA's internal candidate-pruning becomes more aggressive when more
-#     mismatches are allowed, so we keep the tighter setting.
-#   - l=1024: disable seed (required for short reads with terminal damage).
-#   - o=2:    max gap opens (unchanged).
-#   - MAPQ_MIN=20: post-alignment filter; drops multi-mappers with ambiguous
-#     placement. MAPQ=0 in bwa aln means "equally good alignment elsewhere",
-#     which would give the model an arbitrary reference base. Empirically
-#     this drops ~13% of aligned reads on the test set, leaving high-MAPQ
-#     calls only.
+# BWA aln parameters for short aDNA reads (seed disabled, MAPQ-filtered).
 BWA_N        = 0.04
 BWA_O        = 2
 BWA_L        = 1024
@@ -56,14 +42,6 @@ def log(msg=''):
     print(msg, flush=True)
 
 
-def check_dep(cmd):
-    try:
-        subprocess.run([cmd, '--version'], capture_output=True, check=False)
-        return True
-    except FileNotFoundError:
-        return False
-
-
 def run(cmd, desc=''):
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode != 0:
@@ -76,7 +54,7 @@ def decode(arr, length):
     return ''.join(IDX_TO_BASE.get(int(b), 'N') for b in arr[:length])
 
 
-# ── Genome → split assignment (must mirror 2_simulate.sh exactly) ────────────
+# ── Genome → split assignment (must mirror 3_simulate.sh exactly) ────────────
 
 def split_genomes():
     all_g = sorted(GENOME_DIR.rglob('*.fna'))
@@ -243,10 +221,6 @@ def main():
                         default='all',
                         help='Process only one split (for parallel SLURM jobs).')
     args = parser.parse_args()
-
-    for dep in ['bwa', 'samtools']:
-        if not check_dep(dep):
-            sys.exit(f'Missing: {dep}. Load the module or add to PATH.')
 
     log('BWA reference precomputation — realistic per-split alignment')
     log('=' * 60)

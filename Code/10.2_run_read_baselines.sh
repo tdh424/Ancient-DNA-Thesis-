@@ -16,14 +16,6 @@ mkdir -p "$WORK_DIR"
 # Add user-installed tool dirs explicitly (SLURM jobs don't source ~/.bashrc)
 export PATH="$HOME/tools/PMDtools:$PATH"
 
-need() {
-    if ! command -v "$1" &>/dev/null; then
-        echo "ERROR: $1 not on PATH."
-        exit 1
-    fi
-}
-need bwa; need samtools; need pmdtools
-
 # ── Get / build BAM ──────────────────────────────────────────────────────────
 BAM="$WORK_DIR/test_aligned.bam"
 if [ -f "$SHARED_BAM" ]; then
@@ -65,7 +57,7 @@ n_mapped=$(samtools view -c -F 4 "$BAM")
 n_total=$(samtools view -c "$BAM")
 echo "  BAM contains $n_mapped / $n_total mapped reads."
 
-# ── PMDtools (Skoglund 2014) ─────────────────────────────────────────────────
+# ── PMDtools ─────────────────────────────────────────────────────────────────
 PMD_OUT="$WORK_DIR/pmdtools_scores.csv"
 if [ ! -f "$PMD_OUT" ]; then
     echo "Running PMDtools..."

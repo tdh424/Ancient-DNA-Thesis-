@@ -9,8 +9,7 @@ ENV_DIR="data/contam/env"
 mkdir -p "$HUMAN_DIR" "$ENV_DIR"
 
 # ── Step 1: human chr21 ──────────────────────────────────────────────────────
-# Use NCBI Entrez REST to fetch chr21 of GRCh38 directly as FASTA.
-# NC_000021.9 is the RefSeq accession for chromosome 21.
+# Fetch chr21 of GRCh38 (RefSeq NC_000021.9) as FASTA via NCBI Entrez.
 HUMAN_FA="$HUMAN_DIR/chr21.fna"
 if [ ! -f "$HUMAN_FA" ] || [ ! -s "$HUMAN_FA" ]; then
     echo "Downloading human chr21 (GRCh38, NC_000021.9)..."
@@ -25,8 +24,7 @@ if [ ! -f "$HUMAN_FA" ] || [ ! -s "$HUMAN_FA" ]; then
 fi
 
 # ── Step 2: environmental bacteria ───────────────────────────────────────────
-# A diverse panel of common soil / commensal / lab strains representative of
-# typical environmental contamination in aDNA samples.
+# Common soil / commensal / lab strains representing environmental contamination.
 ENV_TAXA=(
     "Bacillus subtilis"
     "Pseudomonas putida"
@@ -39,12 +37,6 @@ ENV_TAXA=(
     "Clostridioides difficile"
     "Acinetobacter baumannii"
 )
-
-if ! command -v datasets &>/dev/null; then
-    echo "ERROR: NCBI 'datasets' CLI not found. Install via:"
-    echo "  conda install -n ancient-dna -c conda-forge ncbi-datasets-cli"
-    exit 1
-fi
 
 download_env_genome() {
     taxon="$1"

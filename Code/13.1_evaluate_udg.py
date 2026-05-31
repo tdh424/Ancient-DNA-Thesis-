@@ -1,6 +1,5 @@
 """13.1_evaluate_udg.py — Cross-protocol evaluation of trained models on a UDG test set."""
 
-import json
 from pathlib import Path
 
 import numpy as np
@@ -8,11 +7,6 @@ import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import torch
 from sklearn.metrics import roc_auc_score, average_precision_score
-
-# Reuse model definition from the training script
-import sys; sys.path.insert(0, 'Code')
-from importlib import import_module
-clf_mod = import_module('10_classifier') if False else None  # placeholder
 
 DATA_DIR = Path('data')
 OUT_DIR  = Path('outputs')
@@ -74,7 +68,7 @@ def briggs_llr(damaged, lengths,
 
 
 def _import_classifier():
-    """Import 10_classifier.py as a module via its file path."""
+    """Import 9_classifier.py as a module via its file path."""
     import importlib.util
     spec = importlib.util.spec_from_file_location(
         'cls10', Path('Code/9_classifier.py'))
@@ -93,9 +87,7 @@ def evaluate_classifier_on(npz_path, label='UDG'):
     """
     cls = _import_classifier()
     d = np.load(npz_path)
-    # Match the dtype contract used by the classifier training code
-    # (Code/9_classifier.py:175): damaged/clean/lengths are cast to int64 so
-    # nn.Embedding accepts them as indices.
+    # Cast damaged/clean/lengths to int64 so nn.Embedding accepts them as indices.
     damaged = d['damaged'].astype(np.int64)
     clean   = d['clean'].astype(np.int64)
     lengths = d['lengths'].astype(np.int64)
@@ -146,10 +138,6 @@ def evaluate_classifier_on(npz_path, label='UDG'):
 def main():
     test_orig = DATA_DIR / 'test.npz'
     test_udg  = DATA_DIR / 'test_udg.npz'
-    if not test_udg.exists():
-        raise SystemExit(f'ERROR: {test_udg} not found. Run Code/13_run_udg_test.sh first.')
-    if not test_orig.exists():
-        raise SystemExit(f'ERROR: {test_orig} not found.')
 
     # Briggs LLR is parameter-free at scoring time — easy first comparison
     print('Briggs LLR baseline:')
@@ -174,11 +162,7 @@ def main():
     print('\nClassifier re-evaluation:')
     for set_label, path in [('Original (non-UDG)', test_orig),
                              ('UDG-treated', test_udg)]:
-        try:
-            labels, results = evaluate_classifier_on(path, label=set_label)
-        except Exception as e:
-            print(f'  [error] {set_label}: {e}')
-            continue
+        labels, results = evaluate_classifier_on(path, label=set_label)
         for model_name, probs in results.items():
             roc, roc_lo, roc_hi = bootstrap_ci(labels, probs, roc_auc_score)
             pra, pra_lo, pra_hi = bootstrap_ci(labels, probs, average_precision_score)
@@ -204,11 +188,8 @@ def main():
                      f'{roc_str:<24}  {pra_str:<24}')
 
     # ── Delta with CI overlap test ───────────────────────────────────────────
-    # The two test sets are independently re-simulated from the same genome
-    # panel, so reads are NOT paired. We therefore compute the delta assuming
-    # independence: a delta is "consistent with zero" if the two ROC-AUC CIs
-    # overlap. This is a conservative test — overlapping CIs do not formally
-    # imply no significant difference, but non-overlapping CIs do imply one.
+    # Test sets are independently simulated (unpaired), so treat the delta as
+    # consistent with zero when the two ROC-AUC CIs overlap.
     lines += ['', '  Cross-protocol delta (UDG - non-UDG) with CI overlap:', '']
     lines.append(f'  {"Model":<28}  {"Delta ROC-AUC":<14}  '
                  f'{"CIs overlap?":<14}')

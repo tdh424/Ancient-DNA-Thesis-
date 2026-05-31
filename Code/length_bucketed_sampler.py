@@ -53,9 +53,7 @@ class LengthBucketedBatchSampler(Sampler[list[int]]):
         self.ancient_frac = float(ancient_frac) if ancient_frac is not None \
             else natural_anc
 
-        # Bucket boundaries from length quantiles. Use `np.quantile` rather
-        # than fixed bp ranges so buckets adapt to whatever distribution the
-        # current dataset has.
+        # Bucket boundaries from length quantiles so buckets adapt to the data.
         quantiles = np.linspace(0.0, 1.0, n_buckets + 1)
         edges = np.quantile(lengths, quantiles)
         # `np.digitize` returns 1..n; subtract 1 and clip so we get 0..n-1.

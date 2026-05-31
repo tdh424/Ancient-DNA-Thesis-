@@ -8,16 +8,8 @@ HUMAN_DIR="data/contam/human"
 ENV_DIR="data/contam/env"
 OUT_DIR="${OUT_DIR:-data/raw}"
 
-# Per-source fragment length distributions:
-# all three sources (bacterial, human, environmental) use the SAME
-# log-normal(3.9, 0.4) distribution. Previously human and env had longer
-# distributions (means ~116 bp and ~79 bp respectively), but that let the
-# classifier use length as a shortcut to discriminate bact vs. human even
-# in the absence of any damage signal. With identical length distributions
-# the classifier is forced to rely on damage features rather than length.
-#
-# The upper length filter is also dropped from 150 to 100 bp so that no
-# read needs to be truncated at the encoding step.
+# All three sources (bacterial, human, environmental) use the SAME
+# log-normal(3.9, 0.4) length distribution, filtered to 30–100 bp.
 HUMAN_LOC=3.9
 HUMAN_SCALE=0.4
 ENV_LOC=3.9
@@ -25,7 +17,7 @@ ENV_SCALE=0.4
 MIN_LEN=30
 MAX_LEN=100
 
-# Sequencing error rate — must match 2_simulate.sh
+# Sequencing error rate — must match 3_simulate.sh
 SEQ_ERR_RATE="${SEQ_ERR_RATE:-0.005}"
 
 # Per-split fragment counts (roughly 50% / 20% of the bacterial total)
@@ -66,7 +58,7 @@ simulate_clean_source() {
         rm -rf "$tmp"; return 1
     fi
 
-    # Prefix headers so 3_dataset.py can track source
+    # Prefix headers so 4_build_dataset.py can track source
     awk -v p="$prefix" '/^>/ {sub(/^>/, ">" p); print; next} {print}' \
         "$tmp/raw.fasta" > "$tmp/clean.fasta"
 
@@ -104,7 +96,7 @@ while IFS= read -r f; do ENV_GENOMES+=("$f"); done \
 N_ENV=${#ENV_GENOMES[@]}
 
 if [ "$N_ENV" -eq 0 ]; then
-    echo "WARNING: no env bacteria in $ENV_DIR. Run 1b_download_contam.sh."
+    echo "WARNING: no env bacteria in $ENV_DIR. Run 1.1_download_contam.sh."
 fi
 for g in "${ENV_GENOMES[@]}"; do [ -f "${g}.fai" ] || samtools faidx "$g"; done
 
@@ -125,7 +117,7 @@ for split in train val test; do
     echo ""
     echo "── $split ──────────────────────────────"
     if [ ! -f "$OUT_DIR/$split/clean.fasta" ]; then
-        echo "  WARNING: $OUT_DIR/$split/clean.fasta missing — run 2_simulate.sh first."
+        echo "  WARNING: $OUT_DIR/$split/clean.fasta missing — run 3_simulate.sh first."
         continue
     fi
 

@@ -9,34 +9,23 @@ GENOME_DIR="data/genomes/ncbi_dataset/data"
 OUT_DIR="${OUT_DIR:-data/raw}"
 FRAGS_PER_GENOME=5000
 
-# UDG mode. Set to "true" to suppress interior C→T (d=0),
-# emulating UDG/USER enzymatic treatment used by many modern aDNA labs.
-# Override at the command line: UDG=true bash Code/3_simulate.sh
+# UDG mode: set to "true" to suppress interior C→T (d=0). Override: UDG=true bash Code/3_simulate.sh
 UDG="${UDG:-false}"
 
-# Fragment length: log-normal — short, typical aDNA endogenous distribution.
-# loc=3.9, scale=0.4 → mean ~53bp. All sources
-# use the SAME length distribution and the upper filter is dropped from
-# 150 bp to 100 bp so that no read needs to be truncated at the encoding
-# step (Code/4_build_dataset.py). This removes the length-as-shortcut
-# loophole the classifier was using to discriminate bact vs. human.
+# Fragment length: log-normal(loc=3.9, scale=0.4) → mean ~53 bp, filtered to
+# 30–100 bp. All sources share this distribution.
 LOC=3.9
 SCALE=0.4
 MIN_LEN=30
 MAX_LEN=100
 
-# Briggs (2007) damage parameters — fitted empirical values for the
-# Vi-33.16 Neanderthal sample (Table 1, Briggs et al. PNAS 2007).
-#       v        l        d         s
-# v = nick frequency      l = geometric decay
-# d = ds interior rate    s = ss overhang rate
-# Per-genome `s` is sampled from Beta(α=4, β=2) so the library
-# captures realistic preservation heterogeneity (s ranges ~0.2–0.95).  v, l, d
-# are kept fixed (well-determined population parameters in Briggs 2007).
+# Briggs damage parameters: v = nick frequency, l = geometric decay,
+# d = ds interior rate, s = ss overhang rate. Per-genome s ~ Beta(α=4, β=2)
+# (~0.2–0.95) for preservation heterogeneity; v, l, d fixed.
 BRIGGS_V=0.0241
 BRIGGS_L=0.3590
 BRIGGS_D=0.00937
-BRIGGS_S_MEAN=0.6815   # Vi-33.16 reference; per-genome s drawn around this
+BRIGGS_S_MEAN=0.6815   # per-genome s drawn around this mean
 
 # Sequencing error rate applied AFTER deamSim.  Real Illumina
 # reads carry ~0.1–1% error per base; we use 0.5% as a typical rate.
@@ -66,19 +55,13 @@ done
 
 # Index genomes with samtools faidx (fragSim requires .fai)
 module load samtools 2>/dev/null || true
-if ! command -v samtools &>/dev/null; then
-    echo "ERROR: samtools not found. Load it with 'module load samtools'."
-    exit 1
-fi
 echo "Indexing genomes..."
 find "$GENOME_DIR" -name "*.fna" | while read -r f; do
     [ -f "${f}.fai" ] || samtools faidx "$f" 2>/dev/null
 done
 echo "  Done indexing."
 
-# Collect genome files (sorted for deterministic train/val/test split —
-# the same ordering is used by 4b_bwa.py and run_pydamage.sh so reads are
-# always aligned against the genomes they were simulated from)
+# Collect genome files (sorted for a deterministic train/val/test split).
 GENOMES=()
 while IFS= read -r f; do
     GENOMES+=("$f")
@@ -108,9 +91,7 @@ if [ -f "$SPLIT_TSV" ]; then
     echo "  (${#ACC_SPLIT[@]} accessions)"
 fi
 
-# Helper: sample s ~ Beta(α=4, β=2) (mean ≈ 0.667, var ≈ 0.032).  Implemented
-# in Python because awk lacks Beta sampling.  Seeded by genome index for
-# reproducibility.
+# Helper: sample s ~ Beta(α=4, β=2), seeded by genome index for reproducibility.
 sample_per_genome_s() {
     local seed="$1"; local mean="$2"
     python3 -c "
@@ -197,11 +178,8 @@ for i in "${!GENOMES[@]}"; do
         continue
     fi
 
-    # Step 3: Apply Illumina sequencing errors to the damaged reads only.
-    # Rate ≈ 0.5%/base.  Done in Python because Gargammel
-    # does not provide a sequencer-error step.  Errors are uniform random
-    # substitutions among A,C,G,T (deliberately including A↔A no-ops which
-    # are filtered).
+    # Step 3: apply ~0.5%/base sequencing errors to the damaged reads (uniform
+    # random substitutions among A,C,G,T).
     if [ "$(awk -v r=$SEQ_ERR_RATE 'BEGIN{print (r>0)?1:0}')" = "1" ]; then
         python3 - "$tmp/damaged.fasta" "$tmp/damaged_err.fasta" "$SEQ_ERR_RATE" "$i" <<'PY'
 import sys, random

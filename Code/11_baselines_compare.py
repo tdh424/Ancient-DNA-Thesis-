@@ -17,20 +17,17 @@ OUT_DIR    = Path('outputs')
 ML_PROBS   = OUT_DIR / 'results' / 'classifier_probs.npz'
 TEST_FASTA = DATA_DIR / 'raw' / 'test' / 'damaged.fasta'
 
-# ── Briggs (2007) damage parameters — must match Code/3_simulate.sh exactly ──
-# Empirical fit to the Vi-33.16 Neanderthal sample (Briggs et al.,
-# PNAS 104(37):14616–14621, Table 1).
+# ── Briggs damage parameters — must match Code/3_simulate.sh exactly ──
 BRIGGS_V = 0.0241    # nick frequency (ν)
 BRIGGS_L = 0.3590    # geometric decay constant (λ)
 BRIGGS_D = 0.00937   # double-strand interior deamination rate (δ_d)
 BRIGGS_S = 0.6815    # single-strand overhang deamination rate (δ_s)
-SEQ_ERR  = 0.01      # sequencing error rate assumed by the LLR (we don't add
-                     # any in 2_simulate.sh; this is just the Briggs default).
+SEQ_ERR  = 0.01      # sequencing error rate assumed by the LLR (Briggs default)
 
 # Vocab: PAD=0 A=1 C=2 G=3 T=4 N=5
 IDX_TO_BASE = {0: 'N', 1: 'A', 2: 'C', 3: 'G', 4: 'T', 5: 'N'}
 
-# ML model display names — must match keys saved by 10_classifier.py
+# ML model display names — must match keys saved by 9_classifier.py
 ML_MODELS = {
     'probs_evo_full': 'Evo2 (per-base + read LL)',
     'probs_evo_base': 'Evo2 (per-base)',
@@ -59,8 +56,7 @@ LINE_STYLES = {
 def briggs_damage_prob(k, s=BRIGGS_S, lam=BRIGGS_L, d=BRIGGS_D):
     """
     P(deamination at distance k from read end).
-    p(k) = s·λ^k + d   (Briggs 2007, Eq. 1)
-    k=0 is the terminal position.
+    p(k) = s·λ^k + d   (k=0 is the terminal position).
     """
     return s * (lam ** k) + d
 
@@ -164,11 +160,6 @@ def load_pydamage_results(csv_path, contig_ids):
 
 # ── Metrics ───────────────────────────────────────────────────────────────────
 
-def youden_threshold(probs, labels):
-    fpr, tpr, thr = roc_curve(labels, probs)
-    return float(thr[np.argmax(tpr - fpr)])
-
-
 def best_mcc_threshold(probs, labels, n_steps=201):
     thresholds = np.linspace(0.01, 0.99, n_steps)
     best_t, best_mcc = 0.5, -2.0
@@ -185,7 +176,6 @@ def best_mcc_threshold(probs, labels, n_steps=201):
 def stats_at(probs, labels, threshold):
     pred = (probs >= threshold).astype(int)
     tn, fp, fn, tp = confusion_matrix(labels, pred, labels=[0, 1]).ravel()
-    n    = tn + fp + fn + tp
     sens = tp / (tp + fn) if (tp + fn) > 0 else 0.0
     spec = tn / (tn + fp) if (tn + fp) > 0 else 0.0
     ppv  = tp / (tp + fp) if (tp + fp) > 0 else 0.0
@@ -204,7 +194,7 @@ def main():
     parser.add_argument('--pydamage',  type=Path, default=None,
                         help='pydamage_results.csv from MODE=oracle')
     parser.add_argument('--pydamage-denovo', dest='pydamage_denovo', type=Path, default=None,
-                        help='pydamage_results.csv from MODE=denovo (MEGAHIT)')
+                        help='pydamage_results.csv from MODE=denovo (MetaSPAdes)')
     parser.add_argument('--pmdtools',  type=Path, default=None,
                         help='Path to pmdtools_scores.csv (Code/10.2_run_read_baselines.sh)')
     args = parser.parse_args()
@@ -214,8 +204,6 @@ def main():
 
     # ── Load test data ────────────────────────────────────────────────────────
     test_npz = DATA_DIR / 'test.npz'
-    if not test_npz.exists():
-        print(f'ERROR: {test_npz} not found. Run 3_dataset.py first.'); return
     d       = np.load(test_npz)
     damaged = d['damaged'].astype(np.int32)
     clean   = d['clean'].astype(np.int32)
@@ -246,7 +234,7 @@ def main():
                 if key in ml:
                     models[display_name] = ml[key]
     else:
-        print(f'  No ML probs found at {ML_PROBS}. Run 10_classifier.py first.')
+        print(f'  No ML probs found at {ML_PROBS}. Run 9_classifier.py first.')
 
     models['Briggs LLR'] = probs_briggs
 

@@ -21,7 +21,6 @@ PROB_KEYS = {
 }
 
 # Briggs LLR parameters — must match Code/3_simulate.sh and Code/11_baselines_compare.py
-# (Briggs et al. 2007, Vi-33.16 Neanderthal fit).
 BRIGGS_S = 0.6815; BRIGGS_L = 0.3590; BRIGGS_D = 0.00937; SEQ_ERR = 0.01
 
 COLORS = {
@@ -103,10 +102,6 @@ def compute_briggs_scores(damaged_arr, lengths_arr):
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
-    if not PROBS_FILE.exists():
-        print(f'ERROR: {PROBS_FILE} not found — run 10_classifier.py first.')
-        return
-
     d      = np.load(PROBS_FILE)
     labels = d['labels']
     N      = len(labels)

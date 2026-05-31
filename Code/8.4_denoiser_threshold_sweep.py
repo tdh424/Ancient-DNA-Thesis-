@@ -115,7 +115,7 @@ def main():
                   f'best MCC = {best_mcc["mcc"]:.3f} @ thr={best_mcc["threshold"]:.2f}')
 
     if not fine:
-        print('No denoised NPZ files found. Run 6_denoise.py first.')
+        print('No denoised NPZ files found. Run 7_denoise.py first.')
         return
 
     # ── Figure: 4-panel sweep ────────────────────────────────────────────────

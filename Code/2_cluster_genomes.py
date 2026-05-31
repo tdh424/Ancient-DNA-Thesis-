@@ -1,7 +1,6 @@
 """2_cluster_genomes.py — Cluster genomes by Mash distance and assign whole clusters to train/val/test."""
 
 import argparse
-import os
 import shutil
 import subprocess
 import sys

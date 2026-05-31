@@ -110,7 +110,6 @@ def main():
 
     # Per-frame breakdown (bact clean): if reads are CDS, the lowest-stop
     # frame should be far below the other two.
-    pf_bact_clean_mean = pf_bact_clean.mean(axis=0)
     # For each read, rank the frames by stop count; report mean stop rate at
     # rank 0 (best), rank 1, rank 2.
     pf_bact_clean_sorted = np.sort(pf_bact_clean, axis=1).mean(axis=0)
@@ -122,9 +121,7 @@ def main():
     # ── Figure ───────────────────────────────────────────────────────────────
     fig, axes = plt.subplots(1, 3, figsize=(17, 5))
 
-    # Panel 1 — Per-frame stop rate, bact clean
-    # The lowest bar should be far below the random expectation if the reads
-    # are protein-coding.
+    # Panel 1 — Per-frame stop rate, bact clean (lowest bar << random if coding).
     ax = axes[0]
     pf_clean_sorted = np.sort(pf_bact_clean, axis=1).mean(axis=0)
     pf_dmg_sorted   = np.sort(pf_bact_dmg,   axis=1).mean(axis=0)
@@ -149,9 +146,7 @@ def main():
         ax.text(xi, v * 100 + 0.1, f'{v*100:.2f}',
                 ha='center', va='bottom', fontsize=7)
 
-    # Panel 2 — Survival curve (P(stop rate > x)) by source, log y-scale
-    # Plain histograms are dominated by a single tall spike at 0, so use a
-    # complementary CDF to see the whole distribution.
+    # Panel 2 — Survival curve (P(stop rate > x)) by source, log y-scale.
     def survival(x, grid):
         x = np.sort(x)
         # 1 - empirical CDF
